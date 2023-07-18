@@ -18,7 +18,7 @@ const tagsSelect = document.getElementById("tags-select");
 closeIcon.addEventListener("click", closeChat);
 groupChat.addEventListener("click", showChat);
 chatSend.addEventListener("click", sendMessage);
-tagsSelect.addEventListener("click", filterProducts);
+tagsSelect.addEventListener("change", filterProducts);
 
 const sedia = new Product({
   dataTag: "mobili",
