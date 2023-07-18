@@ -2,12 +2,190 @@ import {
   build,
   UINode,
   createDivWithClassName,
-  createElementWIthId,
+  createElementWithId,
   Product,
+  UIDesign,
 } from "./js/Dom.js";
 export {};
 
+const p1 = new UIDesign({ tag: "p", id: "my-p1", className: "flex rythm" });
+const p2 = new UIDesign({ tag: "p", id: "my-p1", className: "flex rythm" });
+const div2 = new UIDesign({ tag: "div", id: "my-div", className: "flex cont" });
+const div3 = new UIDesign({ tag: "div", id: "my-div", className: "flex cont" });
+const p4 = new UIDesign({ tag: "p", id: "my-p1", className: "flex rythm" });
+const code = new UIDesign({ tag: "code", id: "", className: "asds" });
+const design = new UIDesign({
+  tag: "div",
+  className: "some",
+  id: "myid",
+});
+design.addChild(
+  div2.addChild(p1).addChild(p2).addChild(code).addChild(div3.addChild(p4))
+);
+console.log(design.element);
+
+const makeTestata = () => {
+  const header = new UIDesign({
+    tag: "header",
+    className: "flex",
+  });
+  const subheader = new UIDesign({
+    tag: "div",
+    className: "sub-header",
+  });
+  const testata = new UIDesign({
+    tag: "div",
+    className: "testata",
+  })
+    .addChild(header)
+    .addChild(subheader);
+  return testata.element;
+};
+
+const makeProductScroll = () => {
+  const makeOption = (value, text) => {
+    const option = new UIDesign({
+      tag: "option",
+      className: "bg",
+    })
+      .setInnerText(text)
+      .setHtmlAttribute("value", value);
+    return option;
+  };
+  const all = makeOption("", "#All-tags");
+  const vestiti = makeOption("vestiti", "#vestiti");
+  const musica = makeOption("musica", "#musica");
+  const elettronica = makeOption("elettronica", "#elettronica");
+  const mobili = makeOption("mobili", "#mobili");
+  const viaggiare = makeOption("viaggiare", "#viaggiare");
+  const soundSys = makeOption("soundsystem", "#soundsystem");
+  const select = new UIDesign({
+    tag: "select",
+    id: "tags-select",
+    className: "bg",
+  });
+  const tagsDropdown = new UIDesign({
+    tag: "div",
+    className: "tags-dropdown",
+  });
+
+  const prdScroll = new UIDesign({
+    tag: "div",
+    id: "product-scroll",
+    className: "product-scroll",
+  }).addChild(
+    tagsDropdown.addChild(
+      select
+        .addChild(all)
+        .addChild(vestiti)
+        .addChild(musica)
+        .addChild(elettronica)
+        .addChild(mobili)
+        .addChild(viaggiare)
+        .addChild(soundSys)
+    )
+  );
+  return prdScroll.element;
+};
+
+const makefooter = () => {
+  const setSourceAttributes = (source, src, type, title, artist) => {
+    source.setHtmlAttribute("src", src);
+    source.setHtmlAttribute("type", type);
+    source.setHtmlAttribute("track-title", title);
+    source.setHtmlAttribute("track-artist", artist);
+    return source;
+  };
+  const source1 = new UIDesign({ tag: "source", className: "bg" });
+  setSourceAttributes(
+    source1,
+    "https://ipfs.io/ipfs/QmVEQavd4Qx31QMRGpWo5bjxFEi27NDs6uWGdNzT27PriR?filename=Gotek%20-%20Tutti%20Fatti.mp3",
+    "audio/mpeg",
+    "Gotek%20-%20Tutti%20Fatti",
+    "Gotek"
+  );
+  const source2 = new UIDesign({ tag: "source", className: "bg" });
+  setSourceAttributes(
+    source2,
+    "https://ipfs.io/ipfs/QmUKNhjXbM2X4h8ZzEq12JFCntKCKYAnk4qfU6NQr2soxG?filename=Hit%20The%20Road%20Jack.mp3",
+    "audio/mpeg",
+    "Hit%20The%20Road%20Jack",
+    "Gotek"
+  );
+  const source3 = new UIDesign({ tag: "source", className: "bg" });
+  setSourceAttributes(
+    source3,
+    "https://ipfs.io/ipfs/QmWXq8zW9XBH8C8VrHQj7zgsd8jUnARqqoE55ytKiKBq8c?filename=Pappa.mp3",
+    "audio/mpeg",
+    "Pappa",
+    "Gotek"
+  );
+  const audioPlayerDesign = new UIDesign({
+    tag: "audio",
+    id: "audio-player",
+    className: "bg",
+  })
+    .setHtmlAttribute("controls")
+    .setInnerText("Your browser does not support the audio tag.");
+  const trackTitleDesign = new UIDesign({
+    tag: "h2",
+    id: "track-title",
+    className: "bg",
+  });
+  const trackArtistDesign = new UIDesign({
+    tag: "p",
+    id: "track-artist",
+    className: "bg",
+  });
+  const playPauseBtnDesign = new UIDesign({
+    tag: "button",
+    id: "play-pause-button",
+    className: "bg",
+    // @ariannatnl non so come si usa questa string
+  }).setInnerText("▶︎");
+  const nextBtnDesign = new UIDesign({
+    tag: "button",
+    id: "next-button",
+    className: "bg",
+  }).setInnerText("Next");
+  const musicplayerDesign = new UIDesign({
+    tag: "div",
+    className: "music-player",
+  });
+  const groupChatDesign = new UIDesign({
+    tag: "button",
+    className: "group-chat",
+    id: "group-chat",
+  });
+  const footerDesign = new UIDesign({
+    tag: "footer",
+    className: "footer",
+  })
+    .addChild(
+      musicplayerDesign
+        .addChild(
+          audioPlayerDesign
+            .addChild(source1)
+            .addChild(source2)
+            .addChild(source3)
+        )
+        .addChild(trackTitleDesign)
+        .addChild(trackArtistDesign)
+        .addChild(playPauseBtnDesign)
+        .addChild(nextBtnDesign)
+    )
+    .addChild(groupChatDesign);
+  return footerDesign.element;
+};
 const layout = document.getElementById("layout");
+const productContainer = document.getElementById("product-container");
+const testataDesign = makeTestata();
+const productScrollDesign = makeProductScroll();
+console.log(productScrollDesign);
+const footerDesign = makefooter();
+// productContainer.appendChild(productScrollDesign);
+layout.appendChild(footerDesign);
+// layout.appendChild(testata.element);
 const productScroll = document.getElementById("product-scroll");
 const closeIcon = document.getElementById("close-icon");
 const groupChat = document.getElementById("group-chat");
@@ -76,7 +254,7 @@ const foto = new Product({
 
 const createProduct = () => {
   const product = new UINode(createDivWithClassName("product"));
-  const image = new UINode(createElementWIthId("img")("product-image"));
+  const image = new UINode(createElementWithId("img")("product-image"));
   const description_container = new UINode(
     createDivWithClassName("description-container")
   );
