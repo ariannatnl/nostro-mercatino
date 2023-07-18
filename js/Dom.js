@@ -26,6 +26,61 @@ export const createPWithText = (text) => {
 export const createDivWithClassName = (classname) => {
     return setclassName(classname)(document.createElement("div"));
 };
+const createProduct = ({ dataTag, tags, title: t, description: d, alt, src, }) => {
+    const product = new UINode(createDivWithClassName("product"));
+    const image = new UINode(createElementWIthId("img")("product-image"));
+    image.value.setAttribute("src", src);
+    const description_container = new UINode(createDivWithClassName("description-container"));
+    const details = new UINode(createDivWithClassName("details"));
+    details.value.innerHTML = tags.join(` `);
+    details.value.setAttribute("data-tags", dataTag);
+    const title = new UINode(createDivWithClassName("title"));
+    title.value.innerText = t;
+    const description = new UINode(createDivWithClassName("description"));
+    setInnerText(d)(description.value);
+    return build(product
+        .addChild(image)
+        .addChild(description_container
+        .addChild(details)
+        .addChild(title)
+        .addChild(description)));
+};
+export class Product {
+    get element() {
+        return createProduct(this);
+    }
+}
+/**
+ *
+ * ```
+ * const testdiv = document.createElement("div");
+ * const testsubdiv1 = document.createElement("div");
+ * const testsubdiv2 = document.createElement("div");
+ * const testsubdiv3 = document.createElement("div");
+ * const node1 = new UINode(testdiv);
+ * const node2 = new UINode(testsubdiv1);
+ * const node3 = new UINode(testsubdiv2);
+ * const node4 = new UINode(testsubdiv3);
+ * node1
+ *  .addChild(node2)
+ *  .addChild(
+ *     node3.addChild(node4)
+ *   );
+ * ```
+globalThis.node = build(node1);
+ */
+export class UINode {
+    constructor(value) {
+        this.value = value;
+        this.children = undefined;
+    }
+    addChild(value) {
+        if (!this.children)
+            this.children = [];
+        this.children.push(value);
+        return this;
+    }
+}
 /**
  *
  *
