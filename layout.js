@@ -3,7 +3,7 @@ import {
   UINode,
   createDivWithClassName,
   createElementWIthId,
-  setAttribute,
+  setStyleAttribute,
   Product,
 } from "./js/Dom.js";
 export {};
