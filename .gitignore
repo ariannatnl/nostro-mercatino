@@ -122,7 +122,3 @@ dist
 .tern-port
 
 .vscode
-
-# TS files
-tsconfig.json
-Dom.ts
