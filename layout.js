@@ -20,14 +20,15 @@ groupChat.addEventListener("click", showChat);
 chatSend.addEventListener("click", sendMessage);
 tagsSelect.addEventListener("click", filterProducts);
 
-const sedia = new Product();
-sedia.src = `https://ipfs.io/ipfs/QmVtvHzsdXbsKCaXGP7WkUj9b5XYDdg5K4LWjhyaZa4Jyx?filename=graffiti-chair.jpg`;
-sedia.dataTag = "mobili";
-sedia.title = "Sedia Vintage";
-sedia.description = `Vendo causa trasloco sedia Vintage super ricercata, usata
-pochissimo. Paglia non rovinata, puzza un pò perchè era in
-cantina, c'è un po di umidità. Spedizione esclusa.`;
-sedia.tags = [`#comodissima`, `#poco-usata`, `#1970`, `#ottime-rifiniture`];
+const sedia = new Product({
+  dataTag: "mobili",
+  src: `https://ipfs.io/ipfs/QmVtvHzsdXbsKCaXGP7WkUj9b5XYDdg5K4LWjhyaZa4Jyx?filename=graffiti-chair.jpg`,
+  title: "Sedia Vintage",
+  description: `Vendo causa trasloco sedia Vintage super ricercata, usata
+  pochissimo. Paglia non rovinata, puzza un pò perchè era in
+  cantina, c'è un po di umidità. Spedizione esclusa.`,
+  tags: [`#comodissima`, `#poco-usata`, `#1970`, `#ottime-rifiniture`],
+});
 
 const createProduct = () => {
   const product = new UINode(createDivWithClassName("product"));
