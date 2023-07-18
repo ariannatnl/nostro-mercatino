@@ -41,6 +41,11 @@ export const setInnerText = (text: string) => (e: HTMLElement) => {
   e.innerText = text;
   return e;
 };
+export const setHtmlAttribute =
+  (attribute: string) => (value: string) => (el: HTMLElement) => {
+    el.setAttribute(attribute, value);
+    return el;
+  };
 export const setStyleAttribute =
   (attribute: keyof Omit<HTMLElement["style"], "length" | "parentRule">) =>
   (value: woo) =>
@@ -98,18 +103,27 @@ export interface UIDesign extends Node<iUIDesign> {}
  * ```
  */
 export class UIDesign implements Node<iUIDesign> {
+  #element;
+  uiNode: UINode;
   constructor(prop: iUIDesign) {
     this.value = prop;
+    this.#element = document.createElement(this.value.tag);
+    this.#element.id = this.value.id ? this.value.id : Dom.generateId();
+    this.#element.className = this.value.className;
+    this.uiNode = new UINode(this.#element);
   }
-  get uiNode(): UINode {
-    const element = document.createElement(this.value.tag);
-    element.id = this.value.id ? this.value.id : Dom.generateId();
-    element.className = this.value.className;
-    return new UINode(element);
-  }
+
   addChild(value: UIDesign) {
     if (!this.children) this.children = [];
     this.children.push(value);
+    return this;
+  }
+  setInnerText(text: string) {
+    setInnerText(text)(this.element);
+    return this;
+  }
+  setHtmlAttribute(attribute: string, value: string) {
+    setHtmlAttribute(attribute)(value)(this.element);
     return this;
   }
   get element() {
@@ -124,7 +138,7 @@ export class UIDesign implements Node<iUIDesign> {
             const children = current.children as UIDesign[];
             if (children) {
               children.forEach((c) => {
-                rootnode.addChild(c.uiNode);
+                current.uiNode.addChild(c.uiNode);
                 stack.push(c as UIDesign);
               });
             }
@@ -132,6 +146,7 @@ export class UIDesign implements Node<iUIDesign> {
         }
         return rootnode;
       };
+
     return build(cb(this.uiNode)(this));
   }
 }
@@ -167,33 +182,60 @@ export namespace Product {
       id: "product",
       className: "product",
     });
-    const product = new UINode(
-      createDivWithClassNameAndId("product")(`product`)
-    );
-    const image = new UINode(createElementWithId("img")("product-image"));
-    image.value.setAttribute("src", src);
-    const description_container = new UINode(
-      createDivWithClassNameAndId("description-container")(
-        `description-container`
-      )
-    );
-    const details = new UINode(createDivWithClassName("details"));
-    details.value.innerHTML = tags.join(` `);
-    details.value.setAttribute("data-tags", dataTag);
-    const title = new UINode(createDivWithClassName("title"));
-    title.value.innerText = t;
-    const description = new UINode(createDivWithClassName("description"));
-    setInnerText(d)(description.value);
-    return build(
-      product
-        .addChild(image)
-        .addChild(
-          description_container
-            .addChild(details)
-            .addChild(title)
-            .addChild(description)
-        )
-    );
+
+    const image_ = new UIDesign({
+      tag: "img",
+      className: "product-image",
+    }).setHtmlAttribute("src", src);
+
+    const description_container_ = new UIDesign({
+      tag: "div",
+      className: "description-container",
+      id: "description-container",
+    });
+
+    const details_ = new UIDesign({
+      tag: "div",
+      className: "details flex-wrap",
+    }).setHtmlAttribute("data-tags", dataTag);
+
+    tags
+      .map((t) => {
+        const tag = new UIDesign({
+          tag: "p",
+          className: "br_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0",
+        }).setInnerText(t);
+        return tag;
+      })
+      .forEach((n) => {
+        details_.addChild(n);
+      });
+
+    const title_ = new UIDesign({
+      tag: "div",
+      className: "title",
+    });
+
+    const h2 = new UIDesign({
+      tag: "h2",
+      className: "mt_0 mr_3 mb_0 ml_0",
+    }).setInnerText(t);
+
+    const description_ = new UIDesign({
+      tag: "div",
+      className: "description",
+    }).setInnerText(d);
+
+    const tree = product_
+      .addChild(image_)
+      .addChild(
+        description_container_
+          .addChild(details_)
+          .addChild(title_.addChild(h2))
+          .addChild(description_)
+      );
+
+    return tree.element;
   };
 }
 
