@@ -10,6 +10,26 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _Product_prop;
+export var Dom;
+(function (Dom) {
+    Dom.generateId = () => `9x${(BigInt(Math.round(Math.random() * 10 ** 16)) *
+        BigInt(Math.round(Math.random() * 10 ** 16)))
+        .toString(16)
+        .slice(0, 16)}`;
+})(Dom || (Dom = {}));
+export var Mercatino;
+(function (Mercatino) {
+    let tipiDiProdotto;
+    (function (tipiDiProdotto) {
+        tipiDiProdotto["mobili"] = "mobili";
+        tipiDiProdotto["vestiti"] = "vestiti";
+        tipiDiProdotto["musica"] = "musica";
+        tipiDiProdotto["elettronica"] = "elettronica";
+        tipiDiProdotto["viaggiare"] = "viaggiare";
+        tipiDiProdotto["soundSystem"] = "sound-system";
+        tipiDiProdotto["cerco"] = "cerco";
+    })(tipiDiProdotto = Mercatino.tipiDiProdotto || (Mercatino.tipiDiProdotto = {}));
+})(Mercatino || (Mercatino = {}));
 export const appendTheseTo = (node) => (element) => node.appendChild(element);
 export const setclassName = (name) => (e) => {
     e.className = name;
@@ -19,15 +39,15 @@ export const setInnerText = (text) => (e) => {
     e.innerText = text;
     return e;
 };
-export const setAttribute = (attribute) => (value) => (e) => {
+export const setStyleAttribute = (attribute) => (value) => (e) => {
     e.style[attribute] = value;
     return e;
 };
 export const debug = (color) => (isDebug) => (el) => {
     if (isDebug)
-        setAttribute("backgroundColor")(color)(el);
+        setStyleAttribute("backgroundColor")(color)(el);
 };
-export const createElementWIthId = (type) => (id) => {
+export const createElementWithId = (type) => (id) => {
     const element = document.createElement(type);
     element.id = id;
     return element;
@@ -38,35 +58,98 @@ export const createPWithText = (text) => {
 export const createDivWithClassName = (classname) => {
     return setclassName(classname)(document.createElement("div"));
 };
-const createProduct = ({ dataTag, tags, title: t, description: d, alt, src, }) => {
-    const product = new UINode(createDivWithClassName("product"));
-    const image = new UINode(createElementWIthId("img")("product-image"));
-    image.value.setAttribute("src", src);
-    const description_container = new UINode(createDivWithClassName("description-container"));
-    const details = new UINode(createDivWithClassName("details"));
-    details.value.innerHTML = tags.join(` `);
-    details.value.setAttribute("data-tags", dataTag);
-    const title = new UINode(createDivWithClassName("title"));
-    title.value.innerText = t;
-    const description = new UINode(createDivWithClassName("description"));
-    setInnerText(d)(description.value);
-    return build(product
-        .addChild(image)
-        .addChild(description_container
-        .addChild(details)
-        .addChild(title)
-        .addChild(description)));
+export const createDivWithClassNameAndId = (id) => (classname) => {
+    return setclassName(classname)(createElementWithId("div")(id));
 };
+/**
+ * ```
+ * const p1 = new UIDesign({ tag: "p", id: "my-p1", className: "flex rythm" });
+ * const p2 = new UIDesign({ tag: "p", id: "my-p1", className: "flex rythm" });
+ * const div2 = new UIDesign({ tag: "div", id: "my-div", className: "flex cont" });
+ * const code = new UIDesign({ tag: "code", id: "", className: "asds" });
+ *
+ * const design = new UIDesign({
+ *   tag: "div",
+ *   className: "some",
+ *   id: "myid",
+ * });
+ *
+ * design.addChild(div2.addChild(p1).addChild(p2).addChild(code));
+ * ```
+ */
+export class UIDesign {
+    constructor(prop) {
+        this.value = prop;
+    }
+    get uiNode() {
+        const element = document.createElement(this.value.tag);
+        element.id = this.value.id ? this.value.id : Dom.generateId();
+        element.className = this.value.className;
+        return new UINode(element);
+    }
+    addChild(value) {
+        if (!this.children)
+            this.children = [];
+        this.children.push(value);
+        return this;
+    }
+    get element() {
+        const cb = (newNode) => (node) => {
+            const stack = [node];
+            const rootnode = newNode;
+            while (stack.length) {
+                const current = stack.pop();
+                if (current) {
+                    const children = current.children;
+                    if (children) {
+                        children.forEach((c) => {
+                            rootnode.addChild(c.uiNode);
+                            stack.push(c);
+                        });
+                    }
+                }
+            }
+            return rootnode;
+        };
+        return build(cb(this.uiNode)(this));
+    }
+}
 export class Product {
     constructor(prop) {
         _Product_prop.set(this, void 0);
         __classPrivateFieldSet(this, _Product_prop, prop, "f");
     }
     get element() {
-        return createProduct(__classPrivateFieldGet(this, _Product_prop, "f"));
+        return Product.createProduct(__classPrivateFieldGet(this, _Product_prop, "f"));
     }
 }
 _Product_prop = new WeakMap();
+(function (Product) {
+    Product.createProduct = ({ dataTag, tags, title: t, description: d, alt, src, }) => {
+        const product_ = new UIDesign({
+            tag: "div",
+            id: "product",
+            className: "product",
+        });
+        const product = new UINode(createDivWithClassNameAndId("product")(`product`));
+        const image = new UINode(createElementWithId("img")("product-image"));
+        image.value.setAttribute("src", src);
+        const description_container = new UINode(createDivWithClassNameAndId("description-container")(`description-container`));
+        const details = new UINode(createDivWithClassName("details"));
+        details.value.innerHTML = tags.join(` `);
+        details.value.setAttribute("data-tags", dataTag);
+        const title = new UINode(createDivWithClassName("title"));
+        title.value.innerText = t;
+        const description = new UINode(createDivWithClassName("description"));
+        setInnerText(d)(description.value);
+        return build(product
+            .addChild(image)
+            .addChild(description_container
+            .addChild(details)
+            .addChild(title)
+            .addChild(description)));
+    };
+})(Product || (Product = {}));
 /**
  *
  * ```
@@ -98,6 +181,20 @@ export class UINode {
         return this;
     }
 }
+export const dfs = (cb) => (node) => {
+    let stack = [node];
+    let res = [];
+    while (stack.length) {
+        const current = stack.pop();
+        res.push(current);
+        if (current) {
+            const children = current.children;
+            if (children)
+                cb(children, current, stack);
+        }
+    }
+    return node.value;
+};
 /**
  *
  *
@@ -123,20 +220,9 @@ export class UINode {
  * build(divpadre)
  * ```
  */
-export const build = (node) => {
-    let stack = [node];
-    let res = [];
-    while (stack.length) {
-        const current = stack.pop();
-        res.push(current);
-        if (current) {
-            const children = current.children;
-            if (children)
-                children.forEach((c) => {
-                    current.value.appendChild(c.value);
-                    stack.push(c);
-                });
-        }
-    }
-    return node.value;
-};
+export const build = dfs((children, current, stack) => {
+    children.forEach((c) => {
+        current.value.appendChild(c.value);
+        stack.push(c);
+    });
+});
