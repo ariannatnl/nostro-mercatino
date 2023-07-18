@@ -1,5 +1,57 @@
-import { build } from "./js/Dom.js";
+import {
+  build,
+  UINode,
+  createDivWithClassName,
+  createElementWIthId,
+  setAttribute,
+  Product,
+} from "./js/Dom.js";
 export {};
+
+const layout = document.getElementById("layout");
+const productScroll = document.getElementById("product-scroll");
+const closeIcon = document.getElementById("close-icon");
+const groupChat = document.getElementById("group-chat");
+const chatSend = document.getElementById("chat-send");
+const tagsSelect = document.getElementById("tags-select");
+
+closeIcon.addEventListener("click", closeChat);
+groupChat.addEventListener("click", showChat);
+chatSend.addEventListener("click", sendMessage);
+tagsSelect.addEventListener("click", filterProducts);
+
+const sedia = new Product();
+sedia.src = `https://ipfs.io/ipfs/QmVtvHzsdXbsKCaXGP7WkUj9b5XYDdg5K4LWjhyaZa4Jyx?filename=graffiti-chair.jpg`;
+sedia.dataTag = "mobili";
+sedia.title = "Sedia Vintage";
+sedia.description = `Vendo causa trasloco sedia Vintage super ricercata, usata
+pochissimo. Paglia non rovinata, puzza un pò perchè era in
+cantina, c'è un po di umidità. Spedizione esclusa.`;
+sedia.tags = [`#comodissima`, `#poco-usata`, `#1970`, `#ottime-rifiniture`];
+
+const createProduct = () => {
+  const product = new UINode(createDivWithClassName("product"));
+  const image = new UINode(createElementWIthId("img")("product-image"));
+  const description_container = new UINode(
+    createDivWithClassName("description-container")
+  );
+  const details = new UINode(createDivWithClassName("details"));
+  details.value.setAttribute("data-tags", "mobili");
+  const title = new UINode(createDivWithClassName("title"));
+  const description = new UINode(createDivWithClassName("description"));
+  return build(
+    product
+      .addChild(image)
+      .addChild(
+        description_container
+          .addChild(details)
+          .addChild(title)
+          .addChild(description)
+      )
+  );
+};
+productScroll.appendChild(sedia.element);
+productScroll.appendChild(createProduct());
 
 var chatSection = document.getElementById("chatsection");
 chatSection.style.display = "none";
@@ -68,7 +120,7 @@ function sendMessage() {
 // Aggiunto event listener una volta che la pagina è completamente caricata
 window.addEventListener("load", function () {
   var messageInput = document.getElementById("messageInput");
-
+  // closeIcon.onclick(() => {});
   // Aggiunta event listener per l'evento keydown
   messageInput.addEventListener("keydown", function (event) {
     // Controllo se il tasto premuto è il tasto Invio (codice 13)
@@ -86,7 +138,8 @@ const playPauseButton = document.getElementById("play-pause-button");
 const nextButton = document.getElementById("next-button");
 
 // Aggiungi l'evento click al pulsante play/pausa
-playPauseButton.addEventListener("click", function () {
+
+const togglePlay = () => {
   if (audioPlayer.paused) {
     audioPlayer.play();
     playPauseButton.innerHTML = "&#10074;&#10074;"; // Simbolo di pausa
@@ -94,7 +147,9 @@ playPauseButton.addEventListener("click", function () {
     audioPlayer.pause();
     playPauseButton.innerHTML = "&#9658;"; // Simbolo di play
   }
-});
+};
+
+playPauseButton.addEventListener("click", togglePlay);
 // MENU TENDINA
 function filterProducts() {
   var selectElement = document.getElementById("tags-select");
