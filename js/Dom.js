@@ -1,3 +1,15 @@
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _Product_prop;
 export const appendTheseTo = (node) => (element) => node.appendChild(element);
 export const setclassName = (name) => (e) => {
     e.className = name;
@@ -46,10 +58,15 @@ const createProduct = ({ dataTag, tags, title: t, description: d, alt, src, }) =
         .addChild(description)));
 };
 export class Product {
+    constructor(prop) {
+        _Product_prop.set(this, void 0);
+        __classPrivateFieldSet(this, _Product_prop, prop, "f");
+    }
     get element() {
-        return createProduct(this);
+        return createProduct(__classPrivateFieldGet(this, _Product_prop, "f"));
     }
 }
+_Product_prop = new WeakMap();
 /**
  *
  * ```
