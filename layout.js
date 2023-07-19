@@ -69,7 +69,7 @@ const makeProductContainer = () => {
     tag: "div",
     id: "product-container",
     className:
-      "grid p_10 pb_0 of_h pos_f top_100 box_bb mh_100% w_100% b_1-s-rl ch_1",
+      "grid p_10 pb_0 pos_f top_100 box_bb ofy_a mh_100% w_100% b_1-s-rl ch_1",
   }).addChild(prdScroll);
   return productContainer;
 };
