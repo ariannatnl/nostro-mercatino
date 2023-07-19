@@ -16,6 +16,32 @@ export var Dom;
         BigInt(Math.round(Math.random() * 10 ** 16)))
         .toString(16)
         .slice(0, 16)}`;
+    let css_attributes_codes;
+    (function (css_attributes_codes) {
+        css_attributes_codes["position"] = "pos";
+        css_attributes_codes["width"] = "w";
+        css_attributes_codes["height"] = "h";
+        css_attributes_codes["max_height"] = "mh";
+        css_attributes_codes["calculated_height"] = "ch";
+        css_attributes_codes["overflow"] = "of";
+        css_attributes_codes["padding"] = "p";
+        css_attributes_codes["padding_top"] = "pt";
+        css_attributes_codes["padding_right"] = "pr";
+        css_attributes_codes["padding_bottom"] = "pb";
+        css_attributes_codes["padding_left"] = "pl";
+        css_attributes_codes["margin"] = "m";
+        css_attributes_codes["margin_top"] = "mt";
+        css_attributes_codes["margin_right"] = "mr";
+        css_attributes_codes["margin_bottom"] = "mb";
+        css_attributes_codes["margin_left"] = "ml";
+        css_attributes_codes["border"] = "b";
+        css_attributes_codes["border_top"] = "bt";
+        css_attributes_codes["border_right"] = "br";
+        css_attributes_codes["border_bottom"] = "bb";
+        css_attributes_codes["border_left"] = "bl";
+        css_attributes_codes["border_radius"] = "brad";
+        css_attributes_codes["box_sizing"] = "box";
+    })(css_attributes_codes = Dom.css_attributes_codes || (Dom.css_attributes_codes = {}));
 })(Dom || (Dom = {}));
 export var Mercatino;
 (function (Mercatino) {
@@ -163,7 +189,7 @@ _Product_prop = new WeakMap();
             .map((t) => {
             const tag = new UIDesign({
                 tag: "p",
-                className: "br_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0",
+                className: "brad_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0",
             }).setInnerText(t);
             return tag;
         })

@@ -17,6 +17,37 @@ export namespace Dom {
     )
       .toString(16)
       .slice(0, 16)}`;
+
+  export enum css_attributes_codes {
+    position = "pos",
+    width = "w",
+    height = "h",
+    max_height = "mh",
+    calculated_height = "ch",
+
+    overflow = "of",
+    padding = "p",
+    padding_top = "pt",
+    padding_right = "pr",
+    padding_bottom = "pb",
+    padding_left = "pl",
+
+    margin = "m",
+    margin_top = "mt",
+    margin_right = "mr",
+    margin_bottom = "mb",
+    margin_left = "ml",
+
+    border = "b",
+    border_top = "bt",
+    border_right = "br",
+    border_bottom = "bb",
+    border_left = "bl",
+
+    border_radius = "brad",
+
+    box_sizing = "box",
+  }
 }
 
 export namespace Mercatino {
@@ -206,7 +237,7 @@ export namespace Product {
       .map((t) => {
         const tag = new UIDesign({
           tag: "p",
-          className: "br_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0",
+          className: "brad_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0",
         }).setInnerText(t);
         return tag;
       })
