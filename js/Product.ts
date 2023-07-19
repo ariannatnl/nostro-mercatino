@@ -1,3 +1,4 @@
+import { error } from "console";
 import { UIDesign, Node } from "./Dom.js";
 
 export interface iProduct {
@@ -39,7 +40,12 @@ export namespace Product {
       tag: "img",
       className: "product-image",
     }).setHtmlAttribute("src", src);
-
+    image_.element.addEventListener("error", function () {
+      this.setAttribute(
+        "src",
+        "https://ipfs.io/ipfs/QmULxCPwp96RcdMmghqSZ2gb41Z2tkHAdMUcsuoZRk2pZD?filename=default_image.JPG"
+      );
+    });
     const description_container_ = new UIDesign({
       tag: "div",
       className: "description-container",
