@@ -41,6 +41,9 @@ export var Dom;
         css_attributes_codes["border_left"] = "bl";
         css_attributes_codes["border_radius"] = "brad";
         css_attributes_codes["box_sizing"] = "box";
+        css_attributes_codes["align_items"] = "ai";
+        css_attributes_codes["object_fit"] = "of";
+        css_attributes_codes["font_weight"] = "fw";
     })(css_attributes_codes = Dom.css_attributes_codes || (Dom.css_attributes_codes = {}));
 })(Dom || (Dom = {}));
 export var Mercatino;
@@ -170,7 +173,7 @@ _Product_prop = new WeakMap();
         const product_ = new UIDesign({
             tag: "div",
             id: "product",
-            className: "product",
+            className: "b_1-s-rl flex flex-column p_10 bg ai_c mb_10 brad_4",
         });
         const image_ = new UIDesign({
             tag: "img",

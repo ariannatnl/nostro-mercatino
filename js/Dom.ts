@@ -47,6 +47,12 @@ export namespace Dom {
     border_radius = "brad",
 
     box_sizing = "box",
+
+    align_items = "ai",
+
+    object_fit = "of",
+
+    font_weight = "fw",
   }
 }
 
@@ -214,7 +220,7 @@ export namespace Product {
     const product_ = new UIDesign({
       tag: "div",
       id: "product",
-      className: "product",
+      className: "b_1-s-rl flex flex-column p_10 bg ai_c mb_10 brad_4",
     });
 
     const image_ = new UIDesign({
