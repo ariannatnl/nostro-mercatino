@@ -197,6 +197,8 @@ const makechat = () => {
 };
 
 const body = document.getElementsByTagName("body").item(0);
+const pageContainer = document.getElementsByClassName("message");
+console.log(pageContainer);
 const layout = document.getElementById("layout");
 const testataDesign = makeTestata();
 layout.appendChild(testataDesign.element);
@@ -230,13 +232,15 @@ const chatSend = buttonsDesign.element;
 const tagsSelect = selectDesign.element;
 
 const chatSection = chatDesing.element;
-chatSection.style.display = "none";
 // MUSIC PLAYER
 const audioPlayer = audioPlayerDesing.element;
 const trackTitle = trackTitleDesign.element;
 const trackArtist = trackArtistDesign.element;
 const playPauseButton = playPauseBtnDesign.element;
 const nextButton = nextBtnDesign.element;
+// styling
+chatSection.style.display = "none";
+body.className = "m_0 w_100vw h_100vh";
 
 function showChat() {
   console.log("ci sono");
