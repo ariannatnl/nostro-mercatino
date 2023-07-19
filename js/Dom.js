@@ -131,8 +131,11 @@ export class Product {
         _Product_prop.set(this, void 0);
         __classPrivateFieldSet(this, _Product_prop, prop, "f");
     }
-    get element() {
+    get tree() {
         return Product.createProduct(__classPrivateFieldGet(this, _Product_prop, "f"));
+    }
+    get element() {
+        return Product.createProduct(__classPrivateFieldGet(this, _Product_prop, "f")).element;
     }
 }
 _Product_prop = new WeakMap();
@@ -185,7 +188,7 @@ _Product_prop = new WeakMap();
             .addChild(details_)
             .addChild(title_.addChild(h2))
             .addChild(description_));
-        return tree.element;
+        return tree;
     };
 })(Product || (Product = {}));
 /**

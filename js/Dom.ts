@@ -164,8 +164,11 @@ export class Product {
   constructor(prop: iProduct) {
     this.#prop = prop;
   }
-  get element() {
+  get tree() {
     return Product.createProduct(this.#prop);
+  }
+  get element() {
+    return Product.createProduct(this.#prop).element;
   }
 }
 export namespace Product {
@@ -235,7 +238,7 @@ export namespace Product {
           .addChild(description_)
       );
 
-    return tree.element;
+    return tree;
   };
 }
 
