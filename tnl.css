@@ -1,48 +1,9 @@
 body {
-  margin: 0;
-  width: 100vw;
-  height: 100vh;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
-iframe {
-  height: 100vh;
-  width: 50vw;
-}
-
-.page-container {
-  display: flex;
-}
-
-.message {
-  background-color: #f1f1f1;
-  padding: 10px;
-  margin-bottom: 5px;
-}
-
-.user-message {
-  background-color: #d4eaf7;
-}
-
-.input-container {
-  margin-top: 10px;
-}
-
-.input-container input {
-  width: 240px;
-  padding: 5px;
-}
-
-.input-container button {
-  padding: 5px 10px;
-}
-
-.layout {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  overflow: auto;
+p {
+  width: max-content;
 }
 
 footer {
@@ -56,29 +17,22 @@ footer {
 
 header {}
 
+.layout {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: auto;
+}
+
 .sub-header {}
 
-.group-chat {
-  height: 100%;
-  width: 80px;
-}
-
-.product-container {
-  border: 1px solid #ccc;
-  display: grid;
-  padding: 10px;
-  padding-bottom: 0;
-  overflow: hidden;
-  position: fixed;
-  top: 100px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  height: calc(100vh - 80px - 100px);
-  /* Altezza totale - Altezza testata - Altezza footer */
-  max-height: 100%;
-  width: 100%;
-}
-
+/* @ariannatnl TODO prova a dividere singolaremente 
+ * questa classe. Il codice relativo a questa parte
+ * è in Dom.ts, riga 200 piu o meno, nella funzione
+ * `createProduct`, l'oggetto con classname product
+ * va cambiato.
+ */
 .product {
   border: 1px solid #ccc;
   display: flex;
@@ -232,9 +186,61 @@ select {
   display: grid;
 }
 
-p {
-  width: max-content;
+/* position */
+
+.pos_f {
+  position: fixed;
 }
+
+.top_100 {
+  top: 100px;
+}
+
+/* width */
+
+.w_100vw {
+  width: 100vw;
+}
+
+.w_50vw {
+  width: 50vw;
+}
+
+.w_80 {
+  width: 80px;
+}
+
+.w_100\% {
+  width: 100%;
+}
+
+.w_80\% {
+  width: 80%;
+}
+
+.w_240 {
+  width: 240px;
+}
+
+/* height */
+
+.h_100\% {
+  height: 100%;
+}
+
+.h_100vh {
+  height: 100vh;
+}
+
+.mh_100\% {
+  max-height: 100%;
+}
+
+.ch_1 {
+  height: calc(100vh - 80px - 100px);
+}
+
+/* margin */
 
 .m_0 {
   margin: 0;
@@ -242,6 +248,10 @@ p {
 
 .mt_0 {
   margin-top: 0;
+}
+
+.mt_10 {
+  margin-top: 10px;
 }
 
 .mr_0 {
@@ -264,17 +274,21 @@ p {
   margin-bottom: 3px;
 }
 
-.flex-wrap {
-  flex-wrap: wrap;
+.mb_5 {
+  margin-bottom: 5px;
 }
 
-.br_5 {
+/* border */
+
+.b_1-s-rl {
+  border: 1px solid #ccc;
+}
+
+.brad_5 {
   border-radius: 5px;
 }
 
-.bg_lightGreen {
-  background-color: rgb(205, 239, 205);
-}
+/* padding */
 
 .p_1 {
   padding: 1px;
@@ -284,6 +298,72 @@ p {
   padding: 2px;
 }
 
+.p_5 {
+  padding: 5px;
+}
+
+.p_10 {
+  padding: 10px;
+}
+
+.p_5-10 {
+  padding: 5px 10px;
+}
+
+.pb_0 {
+  padding-bottom: 0;
+}
+
+/* background color */
+
 .bg {
   background-color: rgb(245, 243, 243);
+}
+
+.bg_r_l {
+  background-color: #f1f1f1;
+}
+
+.bg_b_l {
+  background-color: #d4eaf7;
+}
+
+.bg_lightGreen {
+  background-color: rgb(205, 239, 205);
+}
+
+/* display */
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.grid {
+  display: grid;
+}
+
+/* overflow */
+
+.of_a {
+  overflow: auto;
+}
+
+.of_h {
+  overflow: hidden;
+}
+
+.ofy_a {
+  overflow-y: auto;
+}
+
+.box_bb {
+  box-sizing: border-box;
 }
