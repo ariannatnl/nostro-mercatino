@@ -10,15 +10,15 @@ console.log(app.requestProvider);
 const makeTestata = () => {
   const header = new UIDesign({
     tag: "header",
-    className: "bg flex",
+    className: "bg_t flex",
   });
   const button = new UIDesign({
     tag: "button",
-    className: "bg",
+    className: "bg_l c_d",
   }).setInnerText("WebLN");
   const subheader = new UIDesign({
     tag: "div",
-    className: "bg sub-header",
+    className: "bg_t sub-header",
   });
   const testata = new UIDesign({
     tag: "div",
@@ -49,7 +49,7 @@ const makeProductContainer = () => {
   const select = new UIDesign({
     tag: "select",
     id: "tags-select",
-    className: "bg",
+    className: "bg_t",
   });
   const tagsDropdown = new UIDesign({
     tag: "div",
@@ -60,18 +60,7 @@ const makeProductContainer = () => {
     tag: "div",
     id: "product-scroll",
     className: "product-scroll",
-  }).addChild(
-    tagsDropdown.addChild(
-      select
-        .addChild(all)
-        .addChild(vestiti)
-        .addChild(musica)
-        .addChild(elettronica)
-        .addChild(mobili)
-        .addChild(viaggiare)
-        .addChild(soundSys)
-    )
-  );
+  });
   for (let k in prodotti) {
     prdScroll.addChild(prodotti[k].tree);
   }
@@ -79,8 +68,21 @@ const makeProductContainer = () => {
     tag: "div",
     id: "product-container",
     className:
-      "bg grid p_10 pb_0 pos_f top_100 box_bb ofy_a mh_100% w_100% b_1-s-rl ch_1",
-  }).addChild(prdScroll);
+      "bg grid p_10 pb_0 pos_f top_100 box_bb ofy_a mh_100% w_100% ch_1",
+  })
+    .addChild(
+      tagsDropdown.addChild(
+        select
+          .addChild(all)
+          .addChild(vestiti)
+          .addChild(musica)
+          .addChild(elettronica)
+          .addChild(mobili)
+          .addChild(viaggiare)
+          .addChild(soundSys)
+      )
+    )
+    .addChild(prdScroll);
   return productContainer;
 };
 
