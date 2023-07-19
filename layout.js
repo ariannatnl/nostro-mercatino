@@ -16,7 +16,7 @@ const makeTestata = () => {
   })
     .addChild(header)
     .addChild(subheader);
-  return testata.element;
+  return testata;
 };
 
 const makeProductContainer = () => {
@@ -62,7 +62,15 @@ const makeProductContainer = () => {
         .addChild(soundSys)
     )
   );
-  return prdScroll.element;
+  for (let k in prodotti) {
+    prdScroll.addChild(prodotti[k].tree);
+  }
+  const productContainer = new UIDesign({
+    tag: "div",
+    id: "product-container",
+    className: "product-container",
+  }).addChild(prdScroll);
+  return productContainer;
 };
 
 const makefooter = () => {
@@ -147,36 +155,88 @@ const makefooter = () => {
   })
     .addChild(musicplayerDesign)
     .addChild(groupChatDesign);
-  return footerDesign.element;
+  return footerDesign;
 };
 
-const layout = document.getElementById("layout");
-// testata
-const testataDesign = makeTestata();
-layout.appendChild(testataDesign);
-// product container
-const productContainer = document.getElementById("product-container");
-const productScroll = makeProductContainer();
-for (let k in prodotti) {
-  productScroll.appendChild(prodotti[k].element);
-}
-productContainer.appendChild(productScroll);
-// footer
-const footerDesign = makefooter();
-layout.appendChild(footerDesign);
-const closeIcon = document.getElementById("close-icon");
-const groupChat = document.getElementById("group-chat");
-const chatSend = document.getElementById("chat-send");
-const tagsSelect = document.getElementById("tags-select");
+const makechat = () => {
+  const closeIcon = new UIDesign({
+    tag: "div",
+    id: "close-icon",
+    className: "close-icon",
+  }).setInnerText("✖︎");
+  const chatWindow = new UIDesign({
+    tag: "div",
+    id: "chat-window",
+    className: "chat-window",
+  });
+  const input = new UIDesign({
+    tag: "input",
+    id: "messageInput",
+    className: "bg",
+  })
+    .setHtmlAttribute("type", "text")
+    .setHtmlAttribute("placeholder", "Scrivi un messaggio...");
+  const button = new UIDesign({
+    tag: "button",
+    id: "chat-send",
+    className: "bg",
+  }).setInnerText("Invia");
+  const inputContainer = new UIDesign({
+    tag: "div",
+    className: "input-container",
+  });
+  const chat = new UIDesign({
+    tag: "div",
+    id: "chatsection",
+    className: "chatsection",
+  })
+    .addChild(closeIcon)
+    .addChild(chatWindow)
+    .addChild(inputContainer.addChild(input).addChild(button));
+  return chat;
+};
 
-const chatSection = document.getElementById("chatsection");
+const body = document.getElementsByTagName("body").item(0);
+const layout = document.getElementById("layout");
+const testataDesign = makeTestata();
+layout.appendChild(testataDesign.element);
+const productContainer = makeProductContainer();
+const [productScrollDesing] = productContainer.children;
+const [tagsDropdown] = productScrollDesing.children;
+const [selectDesign] = tagsDropdown.children;
+layout.appendChild(productContainer.element);
+const footerDesign = makefooter();
+const [musicPlayer, groupChatDesign] = footerDesign.children;
+const [musicPlayerDesign] = footerDesign.children;
+const [
+  audioPlayerDesing,
+  trackTitleDesign,
+  trackArtistDesign,
+  playPauseBtnDesign,
+  nextBtnDesign,
+] = musicPlayerDesign.children;
+layout.appendChild(footerDesign.element);
+const chatDesing = makechat();
+const [closeIconDesign, chatWindowDesign, inputContainerDesign] =
+  chatDesing.children;
+const [inputDesign, buttonsDesign] = inputContainerDesign.children;
+body.appendChild(chatDesing.element);
+
+const closeIcon = closeIconDesign.element;
+const chatWindow = chatWindowDesign.element;
+const messageInput = inputDesign.element;
+const groupChat = groupChatDesign.element;
+const chatSend = buttonsDesign.element;
+const tagsSelect = selectDesign.element;
+
+const chatSection = chatDesing.element;
 chatSection.style.display = "none";
 // MUSIC PLAYER
-const audioPlayer = document.getElementById("audio-player");
-const trackTitle = document.getElementById("track-title");
-const trackArtist = document.getElementById("track-artist");
-const playPauseButton = document.getElementById("play-pause-button");
-const nextButton = document.getElementById("next-button");
+const audioPlayer = audioPlayerDesing.element;
+const trackTitle = trackTitleDesign.element;
+const trackArtist = trackArtistDesign.element;
+const playPauseButton = playPauseBtnDesign.element;
+const nextButton = nextBtnDesign.element;
 
 function showChat() {
   console.log("ci sono");
@@ -217,18 +277,14 @@ class RelayMock {
 const relay = new RelayMock();
 
 function createTextElement(messageText, messageInput) {
-  var chatWindow = document.getElementById("chatWindow");
   var messageContainer = document.createElement("div");
   messageContainer.className = "message user-message";
   messageContainer.textContent = messageText;
-
   chatWindow.insertBefore(messageContainer, chatWindow.firstChild);
-
   messageInput.value = "";
 }
 
 function sendMessage() {
-  var messageInput = document.getElementById("messageInput");
   var messageText = messageInput.value.trim();
   if (messageText !== "") {
     relay.messageInput = messageInput;
@@ -237,11 +293,8 @@ function sendMessage() {
 }
 
 function filterProducts() {
-  var selectElement = document.getElementById("tags-select");
-  var selectedTag = selectElement.value;
-
+  var selectedTag = tagsSelect.value;
   var products = document.getElementsByClassName("product");
-
   for (var i = 0; i < products.length; i++) {
     var product = products[i];
     var detailsElement = product.querySelector(".details");
@@ -286,7 +339,6 @@ function handleNextButtonClick() {
 }
 
 function handleOnLoad() {
-  var messageInput = document.getElementById("messageInput");
   // closeIcon.onclick(() => {});
   // Aggiunta event listener per l'evento keydown
   messageInput.addEventListener("keydown", function (event) {
