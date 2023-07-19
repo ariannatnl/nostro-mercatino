@@ -1,21 +1,31 @@
+import { App } from "./js/App.js";
 import { UIDesign } from "./js/Dom.js";
 import { prodotti } from "./db/prodotti.js";
+
+const app = new App(window);
+app.themeHandler = () => console.log("color theme changed");
+app.orientationHandler = () => console.log("orientation changed");
+console.log(app.requestProvider);
 
 const makeTestata = () => {
   const header = new UIDesign({
     tag: "header",
-    className: "flex",
+    className: "bg flex",
   });
+  const button = new UIDesign({
+    tag: "button",
+    className: "bg",
+  }).setInnerText("WebLN");
   const subheader = new UIDesign({
     tag: "div",
-    className: "sub-header",
+    className: "bg sub-header",
   });
   const testata = new UIDesign({
     tag: "div",
-    className: "testata",
+    className: "bg testata",
   })
     .addChild(header)
-    .addChild(subheader);
+    .addChild(subheader.addChild(button));
   return testata;
 };
 
@@ -69,7 +79,7 @@ const makeProductContainer = () => {
     tag: "div",
     id: "product-container",
     className:
-      "grid p_10 pb_0 pos_f top_100 box_bb ofy_a mh_100% w_100% b_1-s-rl ch_1",
+      "bg grid p_10 pb_0 pos_f top_100 box_bb ofy_a mh_100% w_100% b_1-s-rl ch_1",
   }).addChild(prdScroll);
   return productContainer;
 };
@@ -126,13 +136,13 @@ const makefooter = () => {
   const playPauseBtnDesign = new UIDesign({
     tag: "button",
     id: "play-pause-button",
-    className: "bg",
+    className: "bg_l c_d",
     // @ariannatnl non so come si usa questa string
   }).setInnerText("▶︎");
   const nextBtnDesign = new UIDesign({
     tag: "button",
     id: "next-button",
-    className: "bg",
+    className: "bg_l c_d",
   }).setInnerText("Next");
   const musicplayerDesign = new UIDesign({
     tag: "div",
@@ -147,12 +157,12 @@ const makefooter = () => {
     .addChild(nextBtnDesign);
   const groupChatDesign = new UIDesign({
     tag: "button",
-    className: "h_100% w_80",
+    className: "bg_l c_d h_fc as_c",
     id: "group-chat",
-  });
+  }).setInnerText("chat");
   const footerDesign = new UIDesign({
     tag: "footer",
-    className: "footer",
+    className: "footer bg box_bb p_5",
   })
     .addChild(musicplayerDesign)
     .addChild(groupChatDesign);
@@ -168,7 +178,7 @@ const makechat = () => {
   const chatWindow = new UIDesign({
     tag: "div",
     id: "chat-window",
-    className: "chat-window",
+    className: "chat-window bg",
   });
   const input = new UIDesign({
     tag: "input",
@@ -190,7 +200,7 @@ const makechat = () => {
   const chat = new UIDesign({
     tag: "div",
     id: "chatsection",
-    className: "chatsection",
+    className: "chatsection bg",
   })
     .addChild(closeIcon)
     .addChild(chatWindow)
@@ -199,10 +209,13 @@ const makechat = () => {
 };
 
 const body = document.getElementsByTagName("body").item(0);
-const pageContainer = document.getElementsByClassName("message");
-console.log(pageContainer);
 const layout = document.getElementById("layout");
+const bg_color = new UIDesign({ tag: "div", className: "color" });
+layout.appendChild(bg_color.element);
 const testataDesign = makeTestata();
+const [header, subheader] = testataDesign.children;
+const [weblnButton] = subheader.children;
+weblnButton.element.addEventListener("click", app.requestProvider);
 layout.appendChild(testataDesign.element);
 const productContainer = makeProductContainer();
 const [productScrollDesing] = productContainer.children;
@@ -344,8 +357,18 @@ function handleNextButtonClick() {
   playPauseButton.innerHTML = "&#10074;&#10074;"; // Simbolo di pausa
 }
 
-function handleOnLoad() {
+async function handleOnLoad() {
   // closeIcon.onclick(() => {});
+  console.log("loaded");
+
+  // try {
+  //   const webln = await globalThis.WebLN.requestProvider();
+
+  //   console.log(webln);
+  // } catch (err) {
+  //   // Handle users without WebLN
+  //   console.log(err);
+  // }
   // Aggiunta event listener per l'evento keydown
   messageInput.addEventListener("keydown", function (event) {
     // Controllo se il tasto premuto è il tasto Invio (codice 13)
@@ -354,7 +377,8 @@ function handleOnLoad() {
 }
 
 relay.on(createTextElement);
-window.addEventListener("load", handleOnLoad);
+app.onLoadHander = handleOnLoad;
+
 closeIcon.addEventListener("click", closeChat);
 groupChat.addEventListener("click", showChat);
 chatSend.addEventListener("click", sendMessage);
