@@ -1,4 +1,4 @@
-import { Product } from "../js/Dom.js";
+import { Product } from "../js/Product.js";
 
 const motoscafoTelecomandato = new Product({
   dataTag: "elettronica",
