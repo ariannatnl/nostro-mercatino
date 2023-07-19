@@ -49,6 +49,7 @@ export namespace Dom {
     box_sizing = "box",
 
     align_items = "ai",
+    align_self = "as",
 
     object_fit = "of",
 
@@ -68,12 +69,6 @@ export namespace Mercatino {
   }
 }
 
-export const appendTheseTo = (node: HTMLElement) => (element: HTMLElement) =>
-  node.appendChild(element);
-export const setclassName = (name: string) => (e: HTMLElement) => {
-  e.className = name;
-  return e;
-};
 export const setInnerText = (text: string) => (e: HTMLElement) => {
   e.innerText = text;
   return e;
@@ -95,28 +90,11 @@ export const debug =
     if (isDebug) setStyleAttribute("backgroundColor")(color)(el);
   };
 
-export const createElementWithId =
-  (type: keyof HTMLElementTagNameMap) => (id: string) => {
-    const element = document.createElement(type);
-    element.id = id;
-    return element;
-  };
-
-export const createPWithText = (text: string) => {
-  return setInnerText(text)(document.createElement("p"));
-};
-export const createDivWithClassName = (classname: string) => {
-  return setclassName(classname)(document.createElement("div"));
-};
-export const createDivWithClassNameAndId =
-  (id: string) => (classname: string) => {
-    return setclassName(classname)(createElementWithId("div")(id));
-  };
-
-interface Node<T> {
+export interface Node<T> {
   value: T;
   children?: Node<T>[];
 }
+
 export interface iUIDesign {
   tag: keyof HTMLElementTagNameMap;
   id?: string;
@@ -188,98 +166,7 @@ export class UIDesign implements Node<iUIDesign> {
   }
 }
 
-export interface iProduct {
-  src: string;
-  dataTag: string;
-  tags: string[];
-  title: string;
-  description: string;
-  alt?: string;
-}
-export class Product {
-  #prop: iProduct;
-  constructor(prop: iProduct) {
-    this.#prop = prop;
-  }
-  get tree() {
-    return Product.createProduct(this.#prop);
-  }
-  get element() {
-    return Product.createProduct(this.#prop).element;
-  }
-}
-export namespace Product {
-  export const createProduct = ({
-    dataTag,
-    tags,
-    title: t,
-    description: d,
-    alt,
-    src,
-  }: iProduct) => {
-    const product_ = new UIDesign({
-      tag: "div",
-      id: "product",
-      className: "b_1-s-rl flex flex-column p_10 bg ai_c mb_10 brad_4",
-    });
-
-    const image_ = new UIDesign({
-      tag: "img",
-      className: "product-image",
-    }).setHtmlAttribute("src", src);
-
-    const description_container_ = new UIDesign({
-      tag: "div",
-      className: "description-container",
-      id: "description-container",
-    });
-
-    const details_ = new UIDesign({
-      tag: "div",
-      className: "details flex-wrap",
-    }).setHtmlAttribute("data-tags", dataTag);
-
-    tags
-      .map((t) => {
-        const tag = new UIDesign({
-          tag: "p",
-          className: "brad_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0",
-        }).setInnerText(t);
-        return tag;
-      })
-      .forEach((n) => {
-        details_.addChild(n);
-      });
-
-    const title_ = new UIDesign({
-      tag: "div",
-      className: "title",
-    });
-
-    const h2 = new UIDesign({
-      tag: "h2",
-      className: "mt_0 mr_3 mb_0 ml_0",
-    }).setInnerText(t);
-
-    const description_ = new UIDesign({
-      tag: "div",
-      className: "description",
-    }).setInnerText(d);
-
-    const tree = product_
-      .addChild(image_)
-      .addChild(
-        description_container_
-          .addChild(details_)
-          .addChild(title_.addChild(h2))
-          .addChild(description_)
-      );
-
-    return tree;
-  };
-}
-
-export interface UINode {
+export interface UINode extends Node<HTMLElement> {
   value: HTMLElement;
   children?: UINode[];
 }
@@ -302,7 +189,7 @@ export interface UINode {
  * ```
 globalThis.node = build(node1);
  */
-export class UINode {
+export class UINode implements UINode {
   constructor(public value: HTMLElement) {
     this.children = undefined;
   }

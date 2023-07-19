@@ -9,7 +9,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _UIDesign_element, _Product_prop;
+var _UIDesign_element;
 export var Dom;
 (function (Dom) {
     Dom.generateId = () => `9x${(BigInt(Math.round(Math.random() * 10 ** 16)) *
@@ -42,6 +42,7 @@ export var Dom;
         css_attributes_codes["border_radius"] = "brad";
         css_attributes_codes["box_sizing"] = "box";
         css_attributes_codes["align_items"] = "ai";
+        css_attributes_codes["align_self"] = "as";
         css_attributes_codes["object_fit"] = "of";
         css_attributes_codes["font_weight"] = "fw";
     })(css_attributes_codes = Dom.css_attributes_codes || (Dom.css_attributes_codes = {}));
@@ -59,11 +60,6 @@ export var Mercatino;
         tipiDiProdotto["cerco"] = "cerco";
     })(tipiDiProdotto = Mercatino.tipiDiProdotto || (Mercatino.tipiDiProdotto = {}));
 })(Mercatino || (Mercatino = {}));
-export const appendTheseTo = (node) => (element) => node.appendChild(element);
-export const setclassName = (name) => (e) => {
-    e.className = name;
-    return e;
-};
 export const setInnerText = (text) => (e) => {
     e.innerText = text;
     return e;
@@ -79,20 +75,6 @@ export const setStyleAttribute = (attribute) => (value) => (e) => {
 export const debug = (color) => (isDebug) => (el) => {
     if (isDebug)
         setStyleAttribute("backgroundColor")(color)(el);
-};
-export const createElementWithId = (type) => (id) => {
-    const element = document.createElement(type);
-    element.id = id;
-    return element;
-};
-export const createPWithText = (text) => {
-    return setInnerText(text)(document.createElement("p"));
-};
-export const createDivWithClassName = (classname) => {
-    return setclassName(classname)(document.createElement("div"));
-};
-export const createDivWithClassNameAndId = (id) => (classname) => {
-    return setclassName(classname)(createElementWithId("div")(id));
 };
 /**
  * ```
@@ -155,71 +137,6 @@ export class UIDesign {
     }
 }
 _UIDesign_element = new WeakMap();
-export class Product {
-    constructor(prop) {
-        _Product_prop.set(this, void 0);
-        __classPrivateFieldSet(this, _Product_prop, prop, "f");
-    }
-    get tree() {
-        return Product.createProduct(__classPrivateFieldGet(this, _Product_prop, "f"));
-    }
-    get element() {
-        return Product.createProduct(__classPrivateFieldGet(this, _Product_prop, "f")).element;
-    }
-}
-_Product_prop = new WeakMap();
-(function (Product) {
-    Product.createProduct = ({ dataTag, tags, title: t, description: d, alt, src, }) => {
-        const product_ = new UIDesign({
-            tag: "div",
-            id: "product",
-            className: "b_1-s-rl flex flex-column p_10 bg ai_c mb_10 brad_4",
-        });
-        const image_ = new UIDesign({
-            tag: "img",
-            className: "product-image",
-        }).setHtmlAttribute("src", src);
-        const description_container_ = new UIDesign({
-            tag: "div",
-            className: "description-container",
-            id: "description-container",
-        });
-        const details_ = new UIDesign({
-            tag: "div",
-            className: "details flex-wrap",
-        }).setHtmlAttribute("data-tags", dataTag);
-        tags
-            .map((t) => {
-            const tag = new UIDesign({
-                tag: "p",
-                className: "brad_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0",
-            }).setInnerText(t);
-            return tag;
-        })
-            .forEach((n) => {
-            details_.addChild(n);
-        });
-        const title_ = new UIDesign({
-            tag: "div",
-            className: "title",
-        });
-        const h2 = new UIDesign({
-            tag: "h2",
-            className: "mt_0 mr_3 mb_0 ml_0",
-        }).setInnerText(t);
-        const description_ = new UIDesign({
-            tag: "div",
-            className: "description",
-        }).setInnerText(d);
-        const tree = product_
-            .addChild(image_)
-            .addChild(description_container_
-            .addChild(details_)
-            .addChild(title_.addChild(h2))
-            .addChild(description_));
-        return tree;
-    };
-})(Product || (Product = {}));
 /**
  *
  * ```
