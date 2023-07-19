@@ -68,7 +68,8 @@ const makeProductContainer = () => {
   const productContainer = new UIDesign({
     tag: "div",
     id: "product-container",
-    className: "product-container",
+    className:
+      "grid p_10 pb_0 of_h pos_f top_100 box_bb ofy_a mh_100% w_100% b_1-s-rl ch_1",
   }).addChild(prdScroll);
   return productContainer;
 };
@@ -146,7 +147,7 @@ const makefooter = () => {
     .addChild(nextBtnDesign);
   const groupChatDesign = new UIDesign({
     tag: "button",
-    className: "group-chat",
+    className: "h_100% w_80",
     id: "group-chat",
   });
   const footerDesign = new UIDesign({
@@ -172,18 +173,19 @@ const makechat = () => {
   const input = new UIDesign({
     tag: "input",
     id: "messageInput",
-    className: "bg",
+    className: "bg w_240 p_5",
   })
     .setHtmlAttribute("type", "text")
     .setHtmlAttribute("placeholder", "Scrivi un messaggio...");
   const button = new UIDesign({
     tag: "button",
     id: "chat-send",
-    className: "bg",
+    className: "bg p_5-10",
   }).setInnerText("Invia");
   const inputContainer = new UIDesign({
     tag: "div",
-    className: "input-container",
+    className: "mt_10 w_240 p_5 flex",
+    id: "input-container p_5-10",
   });
   const chat = new UIDesign({
     tag: "div",
@@ -282,7 +284,7 @@ const relay = new RelayMock();
 
 function createTextElement(messageText, messageInput) {
   var messageContainer = document.createElement("div");
-  messageContainer.className = "message user-message";
+  messageContainer.className = "bg_r_l p_10 mb_5";
   messageContainer.textContent = messageText;
   chatWindow.insertBefore(messageContainer, chatWindow.firstChild);
   messageInput.value = "";
