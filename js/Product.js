@@ -15,7 +15,7 @@ export class Product {
         const product_ = new UIDesign({
             tag: "div",
             id: "product",
-            className: "b_1-s-rl flex flex-column p_10 bg ai_c mb_10 brad_4",
+            className: "b_1-s-gd flex flex-column p_10 bg ai_c mb_10 brad_4",
         });
         const image_ = new UIDesign({
             tag: "img",
@@ -28,7 +28,7 @@ export class Product {
         });
         const details_ = new UIDesign({
             tag: "div",
-            className: "details flex-wrap",
+            className: "flex flex-wrap",
         }).setHtmlAttribute("data-tags", dataTag);
         tags
             .map((t) => {
@@ -47,11 +47,11 @@ export class Product {
         });
         const h2 = new UIDesign({
             tag: "h2",
-            className: "mt_0 mr_3 mb_0 ml_0",
+            className: "mt_0 mr_3 mb_10 ml_0",
         }).setInnerText(t);
         const description_ = new UIDesign({
             tag: "div",
-            className: "description",
+            className: "c_l",
         }).setInnerText(d);
         const tree = product_
             .addChild(image_)
