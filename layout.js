@@ -6,18 +6,6 @@ import { PopUpMenu } from "./js/PopUpMenu.js";
 import { App } from "./js/App.js";
 import { prodotti } from "./db/prodotti.js";
 
-const handleOnLoad = (app) => {
-  return async function () {
-    console.log("loaded");
-    const iffee = (condition, cb) => {
-      if (condition) cb();
-    };
-    app.requestProvider();
-    const keydownHandler = (event) => iffee(event.keyCode === 13, sendMessage);
-    messageInput.addEventListener("keydown", keydownHandler);
-  };
-};
-
 function closeChat() {
   chatSection.style.display = "none";
   layout.style.filter = "none";
@@ -124,30 +112,48 @@ app.on("themeChange", () => console.log("color theme changed"));
 app.on("orientationChange", () => console.log("orientation changed"));
 app.on("requestedProvider", () => console.log("provider requested"));
 
-app.on("load", handleOnLoad(app));
-app.on("no-provider", () => console.log("no provider"));
-app.on("got-provider", () => console.log("got provider"));
+app.on("load", (app) => {
+  console.log("loaded");
+  const iffee = (condition, cb) => {
+    if (condition) cb();
+  };
+  app.requestProvider();
+  const keydownHandler = (event) => iffee(event.keyCode === 13, sendMessage);
+  messageInput.addEventListener("keydown", keydownHandler);
+});
+app.on("no-provider", (app) => {
+  console.log(app);
+});
 
 const bg_color = new UIDesign({ tag: "div", className: "color" });
 app.appendTo("layout", bg_color.element);
 
 // testata
 const testataDesign = new Testata().tree;
+if (!testataDesign.children) throw new Error("no header");
 const [header, subheader] = testataDesign.children;
+if (!subheader.children) throw new Error("no header");
 const [weblnButton] = subheader.children;
+app.on("got-provider", () => {
+  console.log("got provider");
+  weblnButton.setInnerText();
+});
 weblnButton.element.addEventListener("click", app.requestProvider);
 app.appendTo("layout", testataDesign.element);
 
 // prodcontainer
 const productContainer = new Content({ prodotti }).tree;
+if (!productContainer.children) throw new Error("no header");
 const [tagsDropdown, productScrollDesing] = productContainer.children;
+if (!tagsDropdown.children) throw new Error("no header");
 const [selectDesign] = tagsDropdown.children;
 app.appendTo("layout", productContainer.element);
 
 //
 const footerDesign = new Footer().tree;
-const [musicPlayer, groupChatDesign] = footerDesign.children;
-const [musicPlayerDesign] = footerDesign.children;
+if (!footerDesign.children) throw new Error("no header");
+const [musicPlayerDesign, groupChatDesign] = footerDesign.children;
+if (!musicPlayerDesign.children) throw new Error("no header");
 const [
   audioPlayerDesing,
   trackTitleDesign,
@@ -157,8 +163,10 @@ const [
 ] = musicPlayerDesign.children;
 app.appendTo("layout", footerDesign.element);
 const popUpMenuDesign = new PopUpMenu().tree;
+if (!popUpMenuDesign.children) throw new Error("no header");
 const [closeIconDesign, chatWindowDesign, inputContainerDesign] =
   popUpMenuDesign.children;
+if (!inputContainerDesign.children) throw new Error("no header");
 const [inputDesign, buttonsDesign] = inputContainerDesign.children;
 app.appendTo("body", popUpMenuDesign.element);
 app.setBodyClassName("m_0 w_100vw h_100vh");
