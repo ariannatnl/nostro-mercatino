@@ -41,12 +41,11 @@ export class App implements App {
   }
   makeEmitCb = (type: keyof typeof App.events) => () => this.emit(type);
   requestProvider = async () => {
+    this.emit("requestedProvider");
     try {
       this.value.webln = await (window as iWindow).WebLN!.requestProvider();
-      console.log(this.value.webln);
-      this.emit("requestedProvider");
+      this.emit("got-provider");
     } catch (error) {
-      console.error(error);
       this.emit("no-provider");
     }
   };
@@ -87,6 +86,7 @@ export namespace App {
   export enum events {
     load = "load",
     ["no-provider"] = "no-provider",
+    ["got-provider"] = "got-provider",
     themeChange = "themeChange",
     orientationChange = "orientationChange",
     requestedProvider = "requestedProvider",

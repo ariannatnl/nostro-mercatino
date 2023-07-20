@@ -24,13 +24,12 @@ export class App {
         this.value = value;
         this.makeEmitCb = (type) => () => this.emit(type);
         this.requestProvider = () => __awaiter(this, void 0, void 0, function* () {
+            this.emit("requestedProvider");
             try {
                 this.value.webln = yield window.WebLN.requestProvider();
-                console.log(this.value.webln);
-                this.emit("requestedProvider");
+                this.emit("got-provider");
             }
             catch (error) {
-                console.error(error);
                 this.emit("no-provider");
             }
         });
@@ -98,6 +97,7 @@ _App_subscribers = new WeakMap();
     (function (events) {
         events["load"] = "load";
         events["no-provider"] = "no-provider";
+        events["got-provider"] = "got-provider";
         events["themeChange"] = "themeChange";
         events["orientationChange"] = "orientationChange";
         events["requestedProvider"] = "requestedProvider";
