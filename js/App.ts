@@ -20,8 +20,12 @@ export interface iApp {
 }
 export class App implements App {
   constructor(public value: iApp) {
+    const mkcb = this.makeEmitCb;
     this.value.userAgent = new App.UserAgent.UserAgentInfo(this.value.window);
     this.value.isWebln = App.WebLN.isWebLN(this.value.window);
+    this.value.window.addEventListener("load", mkcb("load"));
+    this.themeQuery.addEventListener("change", mkcb("themeChange"));
+    this.orientationQuery.addEventListener("change", mkcb("orientationChange"));
   }
   get themeQuery(): MediaQueryList {
     return App.getThemeQuery(this.value.window);
@@ -29,15 +33,13 @@ export class App implements App {
   get orientationQuery(): MediaQueryList {
     return App.getOrientation(this.value.window);
   }
-  set onLoadHander(handler: EventHandler) {
-    window.addEventListener("load", handler);
-  }
   set themeHandler(handler: EventHandler) {
     this.themeQuery.addEventListener("change", handler);
   }
   set orientationHandler(handler: EventHandler) {
     this.orientationQuery.addEventListener("change", handler);
   }
+  makeEmitCb = (type: keyof typeof App.events) => () => this.emit(type);
   requestProvider = async () => {
     try {
       this.value.webln = await (window as iWindow).WebLN!.requestProvider();
@@ -59,9 +61,32 @@ export class App implements App {
     else this.#subscribers.set(type, [subscriber]);
     return this;
   }
+  appendTo = (to: "body" | "layout", element: HTMLElement) => {
+    if (to === "body") {
+      this.value.window.document
+        .getElementsByTagName(to)[0]
+        .appendChild(element);
+    } else {
+      this.value.window.document.getElementById(to)?.appendChild(element);
+    }
+  };
+  appendToBody = (element: HTMLElement) => {
+    return this.appendTo("body", element);
+  };
+  setBodyClassName = (className: string) => {
+    const body = this.value.window.document
+      .getElementsByTagName("body")
+      .item(0);
+    if (body) {
+      body.className = className;
+    }
+  };
 }
 export namespace App {
   export enum events {
+    load = "load",
+    themeChange = "themeChange",
+    orientationChange = "orientationChange",
     requestedProvider = "requestedProvider",
   }
   export const getThemeQuery = (window: Window) =>

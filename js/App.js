@@ -22,6 +22,7 @@ var _App_subscribers;
 export class App {
     constructor(value) {
         this.value = value;
+        this.makeEmitCb = (type) => () => this.emit(type);
         this.requestProvider = () => __awaiter(this, void 0, void 0, function* () {
             try {
                 this.value.webln = yield window.WebLN.requestProvider();
@@ -33,17 +34,40 @@ export class App {
             }
         });
         _App_subscribers.set(this, new Map());
+        this.appendTo = (to, element) => {
+            var _a;
+            if (to === "body") {
+                this.value.window.document
+                    .getElementsByTagName(to)[0]
+                    .appendChild(element);
+            }
+            else {
+                (_a = this.value.window.document.getElementById(to)) === null || _a === void 0 ? void 0 : _a.appendChild(element);
+            }
+        };
+        this.appendToBody = (element) => {
+            return this.appendTo("body", element);
+        };
+        this.setBodyClassName = (className) => {
+            const body = this.value.window.document
+                .getElementsByTagName("body")
+                .item(0);
+            if (body) {
+                body.className = className;
+            }
+        };
+        const mkcb = this.makeEmitCb;
         this.value.userAgent = new App.UserAgent.UserAgentInfo(this.value.window);
         this.value.isWebln = App.WebLN.isWebLN(this.value.window);
+        this.value.window.addEventListener("load", mkcb("load"));
+        this.themeQuery.addEventListener("change", mkcb("themeChange"));
+        this.orientationQuery.addEventListener("change", mkcb("orientationChange"));
     }
     get themeQuery() {
         return App.getThemeQuery(this.value.window);
     }
     get orientationQuery() {
         return App.getOrientation(this.value.window);
-    }
-    set onLoadHander(handler) {
-        window.addEventListener("load", handler);
     }
     set themeHandler(handler) {
         this.themeQuery.addEventListener("change", handler);
@@ -71,6 +95,9 @@ _App_subscribers = new WeakMap();
 (function (App) {
     let events;
     (function (events) {
+        events["load"] = "load";
+        events["themeChange"] = "themeChange";
+        events["orientationChange"] = "orientationChange";
         events["requestedProvider"] = "requestedProvider";
     })(events = App.events || (App.events = {}));
     App.getThemeQuery = (window) => checkMediaQuery(window)("(prefers-color-scheme: dark)");
