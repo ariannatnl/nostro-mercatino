@@ -6,7 +6,7 @@ declare module "App" {
     (arg: T): void;
   }
   interface EventHandler extends Callback<Event | MediaQueryListEvent> {}
-  interface EmitHandler extends Callback<undefined> {}
+  interface EmitHandler extends Callback<App> {}
   interface iWindow extends Window {
     WebLN?: { requestProvider: typeof requestProvider };
   }
@@ -50,12 +50,12 @@ export class App implements App {
     }
   };
   #subscribers = new Map<keyof typeof App.events, EmitHandler[]>();
-  emit(type: keyof typeof App.events) {
+  emit(type: keyof typeof App.events, data = undefined) {
     const subscribers = this.#subscribers.get(type);
-    if (subscribers) subscribers.forEach((e) => e(undefined));
+    if (subscribers) subscribers.forEach((e) => e(this));
     else throw new Error("no subscriber for this event");
   }
-  on(type: keyof typeof App.events, subscriber: EmitHandler) {
+  on(type: keyof typeof App.events, subscriber: (arg: App) => void) {
     const subscribers = this.#subscribers.get(type);
     if (subscribers) subscribers.push(subscriber);
     else this.#subscribers.set(type, [subscriber]);

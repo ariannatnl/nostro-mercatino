@@ -75,10 +75,10 @@ export class App {
     set orientationHandler(handler) {
         this.orientationQuery.addEventListener("change", handler);
     }
-    emit(type) {
+    emit(type, data = undefined) {
         const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
         if (subscribers)
-            subscribers.forEach((e) => e(undefined));
+            subscribers.forEach((e) => e(this));
         else
             throw new Error("no subscriber for this event");
     }
