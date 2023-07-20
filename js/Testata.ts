@@ -30,12 +30,12 @@ export namespace Testata {
     const subheader = new UIDesign({
       tag: "div",
       id: "sub-header",
-      className: "bg_t sub-header",
+      className: "bg_t",
     });
     const testata = new UIDesign({
       tag: "div",
       id: "testata",
-      className: "bg testata",
+      className: "bg grid pos_f h_100 w_100vw p_10 box_bb",
     })
       .addChild(header)
       .addChild(subheader.addChild(weblnBtn));

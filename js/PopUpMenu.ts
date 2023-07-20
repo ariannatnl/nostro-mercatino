@@ -16,12 +16,12 @@ export namespace PopUpMenu {
     const closeIcon = new UIDesign({
       tag: "div",
       id: "close-icon",
-      className: "close-icon",
+      className: "pos_a top_10 r_10 cursor_p",
     }).setInnerText("✖︎");
     const chatWindow = new UIDesign({
       tag: "div",
       id: "chat-window",
-      className: "chat-window bg",
+      className: "bg w_300 h_400 flex-cr of_a b_1-s-rl",
     });
     const input = new UIDesign({
       tag: "input",

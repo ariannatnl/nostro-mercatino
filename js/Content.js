@@ -31,11 +31,11 @@ export class Content {
         const select = new UIDesign({
             tag: "select",
             id: "tags-select",
-            className: "bg_t",
+            className: "bg mb_10 mt_10 ol_0 b_n p_4 brad_9 js_e",
         });
         const tagsDropdown = new UIDesign({
             tag: "div",
-            className: "tags-dropdown",
+            className: "grid z_1 pos_s top_0 r_0",
         });
         const prdScroll = new UIDesign({
             tag: "div",

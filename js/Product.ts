@@ -61,7 +61,7 @@ export namespace Product {
 
     const description_container_ = new UIDesign({
       tag: "div",
-      className: "description-container",
+      className: "flex flex-column p_10",
       id: "description-container",
     });
 
@@ -85,7 +85,7 @@ export namespace Product {
 
     const title_ = new UIDesign({
       tag: "div",
-      className: "title",
+      className: "fw_b",
     });
 
     const h2 = new UIDesign({

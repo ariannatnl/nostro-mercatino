@@ -28,7 +28,7 @@ export class Footer {
         const audioPlayerDesign = new UIDesign({
             tag: "audio",
             id: "audio-player",
-            className: "bg",
+            className: "bg l_-9999 pos_a",
         })
             // @ts-expect-error
             .setHtmlAttribute("controls")
@@ -36,17 +36,17 @@ export class Footer {
         const trackTitleDesign = new UIDesign({
             tag: "h2",
             id: "track-title",
-            className: "bg",
+            className: "bg m_10-0",
         });
         const trackArtistDesign = new UIDesign({
             tag: "p",
             id: "track-artist",
-            className: "bg",
+            className: "bg m_10-0",
         });
         const playPauseBtnDesign = new UIDesign({
             tag: "button",
             id: "play-pause-button",
-            className: "bg_l c_d",
+            className: "bg_l c_d m_10-0",
             // @ariannatnl non so come si usa questa string
         }).setInnerText("▶︎");
         const nextBtnDesign = new UIDesign({
@@ -56,7 +56,7 @@ export class Footer {
         }).setInnerText("Next");
         const musicplayerDesign = new UIDesign({
             tag: "div",
-            className: "music-player",
+            className: "m_10-0 l_-9999 flex flex-row w_wkfa ai_c jc_sb p_20",
         })
             .addChild(audioPlayerDesign.addChild(source1).addChild(source2).addChild(source3))
             .addChild(trackTitleDesign)

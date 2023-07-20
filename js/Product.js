@@ -37,7 +37,7 @@ export class Product {
         });
         const description_container_ = new UIDesign({
             tag: "div",
-            className: "description-container",
+            className: "flex flex-column p_10",
             id: "description-container",
         });
         const details_ = new UIDesign({
@@ -58,7 +58,7 @@ export class Product {
         });
         const title_ = new UIDesign({
             tag: "div",
-            className: "title",
+            className: "fw_b",
         });
         const h2 = new UIDesign({
             tag: "h2",
