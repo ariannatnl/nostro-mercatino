@@ -55,7 +55,7 @@ export namespace Product {
 
     const imageContainer = new UIDesign({
       tag: "div",
-      className: "grid h_300 w_300 of_a ct_s",
+      className: "grid h_300 w_300 of_a ct_s cu_p",
       id: "img-container",
     });
 
@@ -90,7 +90,7 @@ export namespace Product {
 
     const h2 = new UIDesign({
       tag: "h2",
-      className: "mt_0 mr_3 mb_10 ml_0",
+      className: "mt_0 mr_3 mb_10 ml_0 cu_p",
     }).setInnerText(t);
 
     const description_ = new UIDesign({

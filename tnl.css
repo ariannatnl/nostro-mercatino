@@ -339,7 +339,6 @@ footer {
   color: var(--primary-bg_color-d);
 }
 
-
 /* background color */
 
 .bg_t {
@@ -472,4 +471,11 @@ footer {
 
 .cursor_p {
   cursor: pointer;
+}
+/* cursor */
+.cu_p {
+  cursor: pointer;
+}
+.cu_p:hover {
+  color: aqua;
 }
