@@ -36,16 +36,30 @@ export namespace Product {
       className: "b_1-s-gd flex flex-column p_10 bg ai_c mb_10 brad_4",
     });
 
+    const filter = new UIDesign({
+      tag: "div",
+      className: "bg_fd pos_a h_100cqh w100cqw",
+      id: "filter",
+    });
+
     const image_ = new UIDesign({
       tag: "img",
-      className: "product-image",
+      className: "h_100cqh w100cqw of_c",
     }).setHtmlAttribute("src", src);
     image_.element.addEventListener("error", function () {
       this.setAttribute(
         "src",
         "https://ipfs.io/ipfs/QmULxCPwp96RcdMmghqSZ2gb41Z2tkHAdMUcsuoZRk2pZD?filename=default_image.JPG"
       );
+      imageContainer.element.appendChild(filter.element);
     });
+
+    const imageContainer = new UIDesign({
+      tag: "div",
+      className: "grid h_300 w_300 of_a ct_s",
+      id: "img-container",
+    });
+
     const description_container_ = new UIDesign({
       tag: "div",
       className: "description-container",
@@ -85,7 +99,7 @@ export namespace Product {
     }).setInnerText(d);
 
     const tree = product_
-      .addChild(image_)
+      .addChild(imageContainer.addChild(image_))
       .addChild(
         description_container_
           .addChild(details_)

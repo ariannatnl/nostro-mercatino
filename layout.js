@@ -299,7 +299,7 @@ const relay = new RelayMock();
 
 function createTextElement(messageText, messageInput) {
   var messageContainer = document.createElement("div");
-  messageContainer.className = "bg_r_l p_10 mb_5";
+  messageContainer.className = "bg_vl c_d p_10 mb_5";
   messageContainer.textContent = messageText;
   chatWindow.insertBefore(messageContainer, chatWindow.firstChild);
   messageInput.value = "";
