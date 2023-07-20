@@ -15,64 +15,6 @@ async function handleOnLoad() {
   messageInput.addEventListener("keydown", keydownHandler);
 }
 
-const app = new App(window);
-app.orientationHandler = () => console.log("orientation changed");
-app.on("requestedProvider", () => console.log("provider requested"));
-app.on("load", handleOnLoad);
-app.on("themeChange", () => console.log("color theme changed"));
-
-const bg_color = new UIDesign({ tag: "div", className: "color" });
-app.appendTo("layout", bg_color.element);
-
-// testata
-const testataDesign = new Testata().tree;
-const [header, subheader] = testataDesign.children;
-const [weblnButton] = subheader.children;
-weblnButton.element.addEventListener("click", app.requestProvider);
-app.appendTo("layout", testataDesign.element);
-
-// prodcontainer
-const productContainer = new Content({ prodotti }).tree;
-const [tagsDropdown, productScrollDesing] = productContainer.children;
-const [selectDesign] = tagsDropdown.children;
-app.appendTo("layout", productContainer.element);
-
-//
-const footerDesign = new Footer().tree;
-const [musicPlayer, groupChatDesign] = footerDesign.children;
-const [musicPlayerDesign] = footerDesign.children;
-const [
-  audioPlayerDesing,
-  trackTitleDesign,
-  trackArtistDesign,
-  playPauseBtnDesign,
-  nextBtnDesign,
-] = musicPlayerDesign.children;
-app.appendTo("layout", footerDesign.element);
-const popUpMenuDesign = new PopUpMenu().tree;
-const [closeIconDesign, chatWindowDesign, inputContainerDesign] =
-  popUpMenuDesign.children;
-const [inputDesign, buttonsDesign] = inputContainerDesign.children;
-app.appendTo("body", popUpMenuDesign.element);
-app.setBodyClassName("m_0 w_100vw h_100vh");
-
-const closeIcon = closeIconDesign.element;
-const chatWindow = chatWindowDesign.element;
-const messageInput = inputDesign.element;
-const groupChat = groupChatDesign.element;
-const chatSend = buttonsDesign.element;
-const tagsSelect = selectDesign.element;
-
-const chatSection = popUpMenuDesign.element;
-// MUSIC PLAYER
-const audioPlayer = audioPlayerDesing.element;
-const trackTitle = trackTitleDesign.element;
-const trackArtist = trackArtistDesign.element;
-const playPauseButton = playPauseBtnDesign.element;
-const nextButton = nextBtnDesign.element;
-// styling
-chatSection.style.display = "none";
-
 function closeChat() {
   chatSection.style.display = "none";
   layout.style.filter = "none";
@@ -103,13 +45,6 @@ function sendMessage() {
 function filterProducts() {
   console.log("changed");
   var selectedTag = tagsSelect.value;
-  const makeproducts = (prods) => {
-    let arr = [];
-    for (let key in prods) {
-      arr.push(prods[key]);
-    }
-    return arr;
-  };
   var products = document.querySelectorAll("#product");
   for (var i = 0; i < products.length; i++) {
     var product = products[i];
@@ -180,6 +115,64 @@ function createTextElement(messageText, messageInput) {
   chatWindow.insertBefore(messageContainer, chatWindow.firstChild);
   messageInput.value = "";
 }
+
+const app = new App(window);
+app.on("load", handleOnLoad);
+app.on("themeChange", () => console.log("color theme changed"));
+app.on("orientationChange", () => console.log("orientation changed"));
+app.on("requestedProvider", () => console.log("provider requested"));
+
+const bg_color = new UIDesign({ tag: "div", className: "color" });
+app.appendTo("layout", bg_color.element);
+
+// testata
+const testataDesign = new Testata().tree;
+const [header, subheader] = testataDesign.children;
+const [weblnButton] = subheader.children;
+weblnButton.element.addEventListener("click", app.requestProvider);
+app.appendTo("layout", testataDesign.element);
+
+// prodcontainer
+const productContainer = new Content({ prodotti }).tree;
+const [tagsDropdown, productScrollDesing] = productContainer.children;
+const [selectDesign] = tagsDropdown.children;
+app.appendTo("layout", productContainer.element);
+
+//
+const footerDesign = new Footer().tree;
+const [musicPlayer, groupChatDesign] = footerDesign.children;
+const [musicPlayerDesign] = footerDesign.children;
+const [
+  audioPlayerDesing,
+  trackTitleDesign,
+  trackArtistDesign,
+  playPauseBtnDesign,
+  nextBtnDesign,
+] = musicPlayerDesign.children;
+app.appendTo("layout", footerDesign.element);
+const popUpMenuDesign = new PopUpMenu().tree;
+const [closeIconDesign, chatWindowDesign, inputContainerDesign] =
+  popUpMenuDesign.children;
+const [inputDesign, buttonsDesign] = inputContainerDesign.children;
+app.appendTo("body", popUpMenuDesign.element);
+app.setBodyClassName("m_0 w_100vw h_100vh");
+
+const closeIcon = closeIconDesign.element;
+const chatWindow = chatWindowDesign.element;
+const messageInput = inputDesign.element;
+const groupChat = groupChatDesign.element;
+const chatSend = buttonsDesign.element;
+const tagsSelect = selectDesign.element;
+
+const chatSection = popUpMenuDesign.element;
+// MUSIC PLAYER
+const audioPlayer = audioPlayerDesing.element;
+const trackTitle = trackTitleDesign.element;
+const trackArtist = trackArtistDesign.element;
+const playPauseButton = playPauseBtnDesign.element;
+const nextButton = nextBtnDesign.element;
+// styling
+chatSection.style.display = "none";
 
 relay.on(createTextElement);
 // app.onLoadHander = handleOnLoad;
