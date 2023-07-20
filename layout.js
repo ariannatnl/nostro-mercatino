@@ -121,11 +121,15 @@ app.on("load", (app) => {
   const keydownHandler = (event) => iffee(event.keyCode === 13, sendMessage);
   messageInput.addEventListener("keydown", keydownHandler);
 });
+
 app.on("no-provider", (app) => {
   console.log(app);
 });
 
-const bg_color = new UIDesign({ tag: "div", className: "color" });
+const bg_color = new UIDesign({
+  tag: "div",
+  className: "pos_a top_0 w_100% h_100% bg_prim",
+});
 app.appendTo("layout", bg_color.element);
 
 // testata
@@ -136,7 +140,7 @@ if (!subheader.children) throw new Error("no header");
 const [weblnButton] = subheader.children;
 app.on("got-provider", () => {
   console.log("got provider");
-  weblnButton.setInnerText();
+  weblnButton.setInnerText("yeeeee");
 });
 weblnButton.element.addEventListener("click", app.requestProvider);
 app.appendTo("layout", testataDesign.element);
