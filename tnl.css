@@ -52,8 +52,7 @@ footer {
   overflow: auto;
 }
 
-.sub-header {
-}
+.sub-header {}
 
 /* @ariannatnl TODO prova a dividere singolaremente 
  * questa classe. Il codice relativo a questa parte
@@ -84,8 +83,7 @@ footer {
   display: grid;
 }
 
-.product-scroll {
-}
+.product-scroll {}
 
 @media (min-width: 768px) {
   .product-scroll {
@@ -306,6 +304,10 @@ select {
 
 /* border */
 
+.b_n {
+  border: none;
+}
+
 .b_1-s-rl {
   border: 1px solid #ccc;
 }
@@ -370,11 +372,19 @@ select {
   color: #777;
 }
 
+/* placeholde color */
+
+#input-container input::placeholder {
+  color: var(--primary-bg_color-d);
+}
+
+
 /* background color */
 
 .bg_t {
   background-color: transparent;
 }
+
 .bg_fd {
   background-color: rgba(0, 0, 0, 0.583);
 }
@@ -387,9 +397,14 @@ select {
   background-color: var(--primary-bg_color-l);
 }
 
+.bg_g {
+  background-color: var(--primary-bg_color-g);
+}
+
 .bg_lightGreen {
   background-color: hsla(calc(var(--primary) + 180), 44%, 82%, 0.89);
 }
+
 .bg_vl {
   background-color: hsl(calc(var(--primary) + 300), 50%, 60%);
 }
