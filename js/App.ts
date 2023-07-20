@@ -1,6 +1,14 @@
+import { requestProvider } from "../node_modules/webln/lib/client";
+import { WebLNProvider } from "../node_modules/webln/lib/provider";
+
 declare module "App" {
-  interface EventHandler {
-    <T extends Event | MediaQueryListEvent>(ev: T): void;
+  interface Callback<T> {
+    (arg: T): void;
+  }
+  interface EventHandler extends Callback<Event | MediaQueryListEvent> {}
+  interface EmitHandler extends Callback<undefined> {}
+  interface iWindow extends Window {
+    WebLN?: { requestProvider: typeof requestProvider };
   }
 }
 export interface iApp {
@@ -8,6 +16,7 @@ export interface iApp {
   userAgent: App.UserAgent.UserAgentInfo;
   theme: "light" | "dark" | "no-preference";
   isWebln: boolean;
+  webln: WebLNProvider;
 }
 export class App implements App {
   constructor(public value: iApp) {
@@ -30,10 +39,31 @@ export class App implements App {
     this.orientationQuery.addEventListener("change", handler);
   }
   requestProvider = async () => {
-    console.log(await (window as any).WebLN.requestProvider());
+    try {
+      this.value.webln = await (window as iWindow).WebLN!.requestProvider();
+      console.log(this.value.webln);
+      this.emit("requestedProvider");
+    } catch (error) {
+      console.error(error);
+    }
   };
+  #subscribers = new Map<keyof typeof App.events, EmitHandler[]>();
+  emit(type: keyof typeof App.events) {
+    const subscribers = this.#subscribers.get(type);
+    if (subscribers) subscribers.forEach((e) => e(undefined));
+    else throw new Error("no subscriber for this event");
+  }
+  on(type: keyof typeof App.events, subscriber: EmitHandler) {
+    const subscribers = this.#subscribers.get(type);
+    if (subscribers) subscribers.push(subscriber);
+    else this.#subscribers.set(type, [subscriber]);
+    return this;
+  }
 }
 export namespace App {
+  export enum events {
+    requestedProvider = "requestedProvider",
+  }
   export const getThemeQuery = (window: Window) =>
     checkMediaQuery(window)("(prefers-color-scheme: dark)");
   export const getOrientation = (window: Window) =>
@@ -42,9 +72,6 @@ export namespace App {
     window.matchMedia(string);
 
   export namespace WebLN {
-    interface iWindow extends Window {
-      WebLN?: any;
-    }
     export const isWebLN = (window: iWindow) => (window.WebLN ? true : false);
   }
 

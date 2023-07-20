@@ -7,23 +7,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
 var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
     if (kind === "m") throw new TypeError("Private method is not writable");
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
+var _App_subscribers;
 export class App {
     constructor(value) {
         this.value = value;
         this.requestProvider = () => __awaiter(this, void 0, void 0, function* () {
-            console.log(yield window.WebLN.requestProvider());
+            try {
+                this.value.webln = yield window.WebLN.requestProvider();
+                console.log(this.value.webln);
+                this.emit("requestedProvider");
+            }
+            catch (error) {
+                console.error(error);
+            }
         });
+        _App_subscribers.set(this, new Map());
         this.value.userAgent = new App.UserAgent.UserAgentInfo(this.value.window);
         this.value.isWebln = App.WebLN.isWebLN(this.value.window);
     }
@@ -42,8 +51,28 @@ export class App {
     set orientationHandler(handler) {
         this.orientationQuery.addEventListener("change", handler);
     }
+    emit(type) {
+        const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
+        if (subscribers)
+            subscribers.forEach((e) => e(undefined));
+        else
+            throw new Error("no subscriber for this event");
+    }
+    on(type, subscriber) {
+        const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
+        if (subscribers)
+            subscribers.push(subscriber);
+        else
+            __classPrivateFieldGet(this, _App_subscribers, "f").set(type, [subscriber]);
+        return this;
+    }
 }
+_App_subscribers = new WeakMap();
 (function (App) {
+    let events;
+    (function (events) {
+        events["requestedProvider"] = "requestedProvider";
+    })(events = App.events || (App.events = {}));
     App.getThemeQuery = (window) => checkMediaQuery(window)("(prefers-color-scheme: dark)");
     App.getOrientation = (window) => checkMediaQuery(window)("(orientation: landscape)");
     const checkMediaQuery = (window) => (string) => window.matchMedia(string);

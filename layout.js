@@ -5,27 +5,31 @@ import { prodotti } from "./db/prodotti.js";
 const app = new App(window);
 app.themeHandler = () => console.log("color theme changed");
 app.orientationHandler = () => console.log("orientation changed");
-console.log(app.requestProvider);
+app.on("requestedProvider", () => console.log("provider requested"));
 
 const makeTestata = () => {
   const header = new UIDesign({
     tag: "header",
+    id: "header",
     className: "bg_t flex",
   });
-  const button = new UIDesign({
+  const weblnBtn = new UIDesign({
     tag: "button",
+    id: "webln-btn",
     className: "bg_l c_d",
   }).setInnerText("WebLN");
   const subheader = new UIDesign({
     tag: "div",
+    id: "sub-header",
     className: "bg_t sub-header",
   });
   const testata = new UIDesign({
     tag: "div",
+    id: "testata",
     className: "bg testata",
   })
     .addChild(header)
-    .addChild(subheader.addChild(button));
+    .addChild(subheader.addChild(weblnBtn));
   return testata;
 };
 
@@ -185,7 +189,7 @@ const makechat = () => {
   const input = new UIDesign({
     tag: "input",
     id: "messageInput",
-    className: "bg w_240 p_5",
+    className: "bg_gl c_l b_n w_240 p_5",
   })
     .setHtmlAttribute("type", "text")
     .setHtmlAttribute("placeholder", "Scrivi un messaggio...");
@@ -196,8 +200,8 @@ const makechat = () => {
   }).setInnerText("Invia");
   const inputContainer = new UIDesign({
     tag: "div",
-    className: "mt_10 w_240 p_5 flex",
-    id: "input-container p_5-10",
+    className: "mt_10 w_240 p_5-10 flex",
+    id: "input-container",
   });
   const chat = new UIDesign({
     tag: "div",
@@ -214,16 +218,21 @@ const body = document.getElementsByTagName("body").item(0);
 const layout = document.getElementById("layout");
 const bg_color = new UIDesign({ tag: "div", className: "color" });
 layout.appendChild(bg_color.element);
+
+// testata
 const testataDesign = makeTestata();
 const [header, subheader] = testataDesign.children;
 const [weblnButton] = subheader.children;
 weblnButton.element.addEventListener("click", app.requestProvider);
 layout.appendChild(testataDesign.element);
+
+// prodcontainer
 const productContainer = makeProductContainer();
-const [productScrollDesing] = productContainer.children;
-const [tagsDropdown] = productScrollDesing.children;
+const [tagsDropdown, productScrollDesing] = productContainer.children;
 const [selectDesign] = tagsDropdown.children;
 layout.appendChild(productContainer.element);
+
+//
 const footerDesign = makefooter();
 const [musicPlayer, groupChatDesign] = footerDesign.children;
 const [musicPlayerDesign] = footerDesign.children;
@@ -314,17 +323,25 @@ function sendMessage() {
 }
 
 function filterProducts() {
+  console.log("changed");
   var selectedTag = tagsSelect.value;
-  var products = document.getElementsByClassName("product");
+  const makeproducts = (prods) => {
+    let arr = [];
+    for (let key in prods) {
+      arr.push(prods[key]);
+    }
+    return arr;
+  };
+  var products = document.querySelectorAll("#product");
   for (var i = 0; i < products.length; i++) {
     var product = products[i];
-    var detailsElement = product.querySelector(".details");
+    var detailsElement = product.querySelector("#details");
     var tags = detailsElement.getAttribute("data-tags");
 
-    if (selectedTag === "" || tags.includes(selectedTag)) {
-      product.style.display = "flex";
-    } else {
+    if (!tags.includes(selectedTag)) {
       product.style.display = "none";
+    } else {
+      product.style.display = "flex";
     }
   }
 }
