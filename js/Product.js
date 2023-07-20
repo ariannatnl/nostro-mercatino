@@ -42,6 +42,7 @@ export class Product {
         });
         const details_ = new UIDesign({
             tag: "div",
+            id: "details",
             className: "flex flex-wrap",
         }).setHtmlAttribute("data-tags", dataTag);
         tags

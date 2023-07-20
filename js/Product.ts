@@ -1,4 +1,3 @@
-import { error } from "console";
 import { UIDesign, Node } from "./Dom.js";
 
 export interface iProduct {
@@ -68,6 +67,7 @@ export namespace Product {
 
     const details_ = new UIDesign({
       tag: "div",
+      id: "details",
       className: "flex flex-wrap",
     }).setHtmlAttribute("data-tags", dataTag);
 
