@@ -100,7 +100,9 @@ export interface iUIDesign {
   id?: string;
   className: string;
 }
-export interface UIDesign extends Node<iUIDesign> {}
+export interface UIDesign extends Node<iUIDesign> {
+  children?: UIDesign[];
+}
 /**
  * ```
  * const p1 = new UIDesign({ tag: "p", id: "my-p1", className: "flex rythm" });
@@ -117,7 +119,7 @@ export interface UIDesign extends Node<iUIDesign> {}
  * design.addChild(div2.addChild(p1).addChild(p2).addChild(code));
  * ```
  */
-export class UIDesign implements Node<iUIDesign> {
+export class UIDesign implements UIDesign {
   #element;
   uiNode: UINode;
   constructor(prop: iUIDesign) {
