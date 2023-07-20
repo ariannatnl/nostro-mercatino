@@ -51,9 +51,14 @@ export namespace Dom {
     align_items = "ai",
     align_self = "as",
 
+    justify_content = "jc",
+    justify_self = "js",
+
     object_fit = "of",
 
     font_weight = "fw",
+    background = "back",
+    outline = "ol",
   }
 }
 
