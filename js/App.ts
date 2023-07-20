@@ -81,6 +81,11 @@ export class App implements App {
       body.className = className;
     }
   };
+  get() {
+    const string = `body/layout`;
+    const obj: Record<string, HTMLElement> = {};
+    string.split("/");
+  }
 }
 export namespace App {
   export enum events {

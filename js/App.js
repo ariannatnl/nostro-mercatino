@@ -90,6 +90,11 @@ export class App {
             __classPrivateFieldGet(this, _App_subscribers, "f").set(type, [subscriber]);
         return this;
     }
+    get() {
+        const string = `body/layout`;
+        const obj = {};
+        string.split("/");
+    }
 }
 _App_subscribers = new WeakMap();
 (function (App) {
