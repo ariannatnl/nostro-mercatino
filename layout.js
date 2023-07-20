@@ -6,14 +6,17 @@ import { PopUpMenu } from "./js/PopUpMenu.js";
 import { App } from "./js/App.js";
 import { prodotti } from "./db/prodotti.js";
 
-async function handleOnLoad() {
-  console.log("loaded");
-  const iffee = (condition, cb) => {
-    if (condition) cb();
+const handleOnLoad = (app) => {
+  return async function () {
+    console.log("loaded");
+    const iffee = (condition, cb) => {
+      if (condition) cb();
+    };
+    app.requestProvider();
+    const keydownHandler = (event) => iffee(event.keyCode === 13, sendMessage);
+    messageInput.addEventListener("keydown", keydownHandler);
   };
-  const keydownHandler = (event) => iffee(event.keyCode === 13, sendMessage);
-  messageInput.addEventListener("keydown", keydownHandler);
-}
+};
 
 function closeChat() {
   chatSection.style.display = "none";
@@ -117,10 +120,13 @@ function createTextElement(messageText, messageInput) {
 }
 
 const app = new App(window);
-app.on("load", handleOnLoad);
 app.on("themeChange", () => console.log("color theme changed"));
 app.on("orientationChange", () => console.log("orientation changed"));
 app.on("requestedProvider", () => console.log("provider requested"));
+
+app.on("load", handleOnLoad(app));
+app.on("no-provider", () => console.log("no provider"));
+app.on("got-provider", () => console.log("got provider"));
 
 const bg_color = new UIDesign({ tag: "div", className: "color" });
 app.appendTo("layout", bg_color.element);
