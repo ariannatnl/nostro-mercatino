@@ -31,6 +31,7 @@ export class App {
             }
             catch (error) {
                 console.error(error);
+                this.emit("no-provider");
             }
         });
         _App_subscribers.set(this, new Map());
@@ -96,6 +97,7 @@ _App_subscribers = new WeakMap();
     let events;
     (function (events) {
         events["load"] = "load";
+        events["no-provider"] = "no-provider";
         events["themeChange"] = "themeChange";
         events["orientationChange"] = "orientationChange";
         events["requestedProvider"] = "requestedProvider";

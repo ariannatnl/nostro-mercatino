@@ -47,6 +47,7 @@ export class App implements App {
       this.emit("requestedProvider");
     } catch (error) {
       console.error(error);
+      this.emit("no-provider");
     }
   };
   #subscribers = new Map<keyof typeof App.events, EmitHandler[]>();
@@ -85,6 +86,7 @@ export class App implements App {
 export namespace App {
   export enum events {
     load = "load",
+    ["no-provider"] = "no-provider",
     themeChange = "themeChange",
     orientationChange = "orientationChange",
     requestedProvider = "requestedProvider",
