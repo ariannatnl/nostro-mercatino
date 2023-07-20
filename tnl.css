@@ -467,15 +467,14 @@ footer {
   font-weight: bold;
 }
 
-/* decodations */
+/* decorations */
 
-.cursor_p {
-  cursor: pointer;
-}
+
 /* cursor */
 .cu_p {
   cursor: pointer;
 }
+
 .cu_p:hover {
   color: aqua;
 }

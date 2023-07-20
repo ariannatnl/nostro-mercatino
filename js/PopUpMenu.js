@@ -15,7 +15,7 @@ export class PopUpMenu {
         const closeIcon = new UIDesign({
             tag: "div",
             id: "close-icon",
-            className: "pos_a top_10 r_10 cursor_p",
+            className: "pos_a top_10 r_10 cu_p",
         }).setInnerText("✖︎");
         const chatWindow = new UIDesign({
             tag: "div",
