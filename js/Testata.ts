@@ -35,7 +35,7 @@ export namespace Testata {
     const testata = new UIDesign({
       tag: "div",
       id: "testata",
-      className: "bg grid pos_f h_100 w_100vw p_10 box_bb",
+      className: "bg grid pos_f h_testata w_100vw p_10 box_bb",
     })
       .addChild(header)
       .addChild(subheader.addChild(weblnBtn));

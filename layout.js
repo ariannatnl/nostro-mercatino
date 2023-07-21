@@ -156,7 +156,9 @@ app.appendTo("layout", productContainer.element);
 //
 const footerDesign = new Footer().tree;
 if (!footerDesign.children) throw new Error("no header");
-const [musicPlayerDesign, groupChatDesign] = footerDesign.children;
+const [musicPlayerDesign, buttonContainer] = footerDesign.children;
+if (!buttonContainer.children) throw new Error("no buttoncontainer");
+const [groupChatDesign] = buttonContainer.children;
 if (!musicPlayerDesign.children) throw new Error("no header");
 const [
   audioPlayerDesing,

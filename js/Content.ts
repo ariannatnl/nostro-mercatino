@@ -54,7 +54,7 @@ export namespace Content {
       tag: "div",
       id: "product-container",
       className:
-        "bg grid p_10 pb_0 pos_f top_100 box_bb ofy_a mh_100% w_100% ch_1",
+        "bg grid p_10 pb_0 pos_f top_as_testata box_bb ofy_a mh_100% w_100% ch_1",
     })
       .addChild(
         tagsDropdown.addChild(

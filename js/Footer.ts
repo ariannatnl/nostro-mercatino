@@ -81,7 +81,8 @@ export namespace Footer {
     }).setInnerText("Next");
     const musicplayerDesign = new UIDesign({
       tag: "div",
-      className: "m_10-0 l_-9999 flex flex-row w_wkfa ai_c jc_sb p_20",
+      className:
+        "l_-9999 flex flex-row w_wkfa ai_c jc_sb p_0-20 b_1-s-rl brad_4",
     })
       .addChild(
         audioPlayerDesign.addChild(source1).addChild(source2).addChild(source3)
@@ -95,12 +96,17 @@ export namespace Footer {
       className: "bg_l c_d h_fc as_c",
       id: "group-chat",
     }).setInnerText("chat");
+    const buttonContainer = new UIDesign({
+      tag: "div",
+      id: "buttonContainer",
+      className: "bg p_0-20 flex",
+    });
     const footerDesign = new UIDesign({
       tag: "footer",
-      className: "footer bg box_bb p_5",
+      className: "footer h_footer bg box_bb p_0-20",
     })
       .addChild(musicplayerDesign)
-      .addChild(groupChatDesign);
+      .addChild(buttonContainer.addChild(groupChatDesign));
     return footerDesign;
   };
 }
