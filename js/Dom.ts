@@ -90,6 +90,10 @@ export const setStyleAttribute =
     e.style[attribute] = value;
     return e;
   };
+export const setClassName = (className: string) => (e: HTMLElement) => {
+  e.className = className;
+  return e;
+};
 export const debug =
   (color: woo) => (isDebug: boolean) => (el: HTMLElement) => {
     if (isDebug) setStyleAttribute("backgroundColor")(color)(el);
@@ -147,6 +151,9 @@ export class UIDesign implements UIDesign {
   setHtmlAttribute(attribute: string, value: string) {
     setHtmlAttribute(attribute)(value)(this.element);
     return this;
+  }
+  setClassName(className: string) {
+    setClassName(className)(this.element);
   }
   get element() {
     const cb =

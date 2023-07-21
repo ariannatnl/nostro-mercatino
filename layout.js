@@ -25,11 +25,14 @@ function showChat() {
   footer.style.pointerEvents = "none";
 }
 
-function sendMessage() {
-  var messageText = messageInput.value.trim();
-  if (messageText !== "") {
-    relay.messageInput = messageInput;
-    relay.sendToRelay(undefined, messageText);
+function sendMessage(props) {
+  if (props) {
+  } else {
+    var messageText = messageInput.value.trim();
+    if (messageText !== "") {
+      relay.messageInput = messageInput;
+      relay.sendToRelay(undefined, messageText);
+    }
   }
 }
 
@@ -99,15 +102,63 @@ class RelayMock {
 }
 const relay = new RelayMock();
 
-function createTextElement(messageText, messageInput) {
+let pubkey;
+const getkey = async () => {
+  setTimeout(async () => {
+    pubkey = await window.nostr.getPublicKey();
+    console.log(pubkey);
+    App.Relay.Socket.startSocket({
+      open: App.Relay.openHandler,
+      message: App.Relay.messageHandler((prop) => {
+        console.log(prop);
+        prop.forEach((e) => {
+          createTextElement(e.content, e.type);
+        });
+      })(pubkey),
+    });
+  }, 1000);
+};
+if (window.nostr) {
+  getkey();
+} else {
+  console.log("no nostr");
+}
+
+function createTextElement(messageText, usertype) {
+  var usericon = new UIDesign({
+    tag: "div",
+    id: "user-icon",
+  });
+  usericon.setClassName("bg mw_1.rem h_1.5rem brad_100% m_02rem");
+
+  var text = new UIDesign({
+    tag: "p",
+    id: "message-text",
+    className: "m_0 c_d",
+  }).setInnerText(messageText);
+  const newmessageContainer = new UIDesign({
+    tag: "div",
+    id: "message-container",
+  });
   var messageContainer = document.createElement("div");
-  messageContainer.className = "bg_vl c_d p_10 mb_5";
+  if (usertype === "user") {
+    const className = "flex bg_bl c_d p_10 mb_5 ml_80 brad_5-5-0-5 jc_e";
+    messageContainer.className = className;
+    newmessageContainer.addChild(text).setClassName(className);
+  } else {
+    const className = "flex bg_vl c_d p_10 mb_5 mr_80 brad_0-5-5-5";
+    messageContainer.className = className;
+    newmessageContainer
+      .addChild(usericon)
+      .addChild(text)
+      .setClassName(className);
+  }
   messageContainer.textContent = messageText;
-  chatWindow.insertBefore(messageContainer, chatWindow.firstChild);
+  chatWindow.insertBefore(newmessageContainer.element, chatWindow.firstChild);
   messageInput.value = "";
 }
 
-const app = new App(window);
+const app = new App({ window: window });
 app.on("themeChange", () => console.log("color theme changed"));
 app.on("orientationChange", () => console.log("orientation changed"));
 app.on("requestedProvider", () => console.log("provider requested"));
@@ -205,7 +256,7 @@ const minWidth768Handler = (_, data) => {
   else productScroll.className = DEF_CLASS;
   console.log(productScroll.className);
 };
-app.on("minWidth768", minWidth768Handler);
+app.on("minWidth768Change", minWidth768Handler);
 minWidth768Handler(undefined, app.minWidth768Query);
 
 closeIcon.addEventListener("click", closeChat);

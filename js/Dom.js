@@ -76,6 +76,10 @@ export const setStyleAttribute = (attribute) => (value) => (e) => {
     e.style[attribute] = value;
     return e;
 };
+export const setClassName = (className) => (e) => {
+    e.className = className;
+    return e;
+};
 export const debug = (color) => (isDebug) => (el) => {
     if (isDebug)
         setStyleAttribute("backgroundColor")(color)(el);
@@ -118,6 +122,9 @@ export class UIDesign {
     setHtmlAttribute(attribute, value) {
         setHtmlAttribute(attribute)(value)(this.element);
         return this;
+    }
+    setClassName(className) {
+        setClassName(className)(this.element);
     }
     get element() {
         const cb = (newNode) => (node) => {

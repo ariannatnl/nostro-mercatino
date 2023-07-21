@@ -18,7 +18,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _App_subscribers, _App_eventSubs;
+var _App_subscribers, _App_eventSubs, _App_startSocket;
 export class App {
     constructor(value) {
         this.value = value;
@@ -58,6 +58,7 @@ export class App {
                 body.className = className;
             }
         };
+        _App_startSocket.set(this, App.Relay.Socket.startSocket);
         const mkcb = this.makeEmitCb;
         const mkecb = this.makeEmitEventCb;
         this.value.userAgent = new App.UserAgent.UserAgentInfo(this.value.window);
@@ -66,7 +67,7 @@ export class App {
         this.themeQuery.addEventListener("change", mkcb("themeChange"));
         this.orientationQuery.addEventListener("change", mkcb("orientationChange"));
         this.value.isMinWIth768 = this.minWidth768Query.matches;
-        this.minWidth768Query.addEventListener("change", mkcb("minWidth768"));
+        this.minWidth768Query.addEventListener("change", mkcb("minWidth768Change"));
     }
     get themeQuery() {
         return App.getThemeQuery(this.value.window);
@@ -77,20 +78,7 @@ export class App {
     get minWidth768Query() {
         return App.getMinWith768(this.value.window);
     }
-    set themeHandler(handler) {
-        // @ts-expect-error
-        this.themeQuery.addEventListener("change", handler);
-    }
-    set orientationHandler(handler) {
-        // @ts-expect-error
-        this.orientationQuery.addEventListener("change", handler);
-    }
-    set minIdth768Handler(handler) {
-        // @ts-expect-error
-        this.minWidth768Query.addEventListener("change", handler);
-    }
     emit(type, data = undefined) {
-        console.log("called");
         if (data) {
             if ("matches" in data) {
                 const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
@@ -148,7 +136,7 @@ export class App {
         string.split("/");
     }
 }
-_App_subscribers = new WeakMap(), _App_eventSubs = new WeakMap();
+_App_subscribers = new WeakMap(), _App_eventSubs = new WeakMap(), _App_startSocket = new WeakMap();
 (function (App) {
     let events;
     (function (events) {
@@ -157,8 +145,9 @@ _App_subscribers = new WeakMap(), _App_eventSubs = new WeakMap();
         events["got-provider"] = "got-provider";
         events["themeChange"] = "themeChange";
         events["orientationChange"] = "orientationChange";
+        events["minWidth768Change"] = "minWidth768Change";
         events["requestedProvider"] = "requestedProvider";
-        events["minWidth768"] = "minWidth768";
+        events["relaymessage"] = "relaymessage";
     })(events = App.events || (App.events = {}));
     App.getThemeQuery = (window) => checkMediaQuery(window)("(prefers-color-scheme: dark)");
     App.getOrientation = (window) => checkMediaQuery(window)("(orientation: landscape)");
@@ -208,4 +197,137 @@ _App_subscribers = new WeakMap(), _App_eventSubs = new WeakMap();
         UserAgent.UserAgentInfo = UserAgentInfo;
         UserAgent.isMobile = (userAgent) => /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(userAgent);
     })(UserAgent = App.UserAgent || (App.UserAgent = {}));
+    let Relay;
+    (function (Relay) {
+        let relays;
+        (function (relays) {
+            relays["damus"] = "wss://relay.damus.io";
+            relays["noslol"] = "wss://nos.lol/";
+        })(relays = Relay.relays || (Relay.relays = {}));
+        let Socket;
+        (function (Socket) {
+            let socketEvents;
+            (function (socketEvents) {
+                socketEvents["open"] = "open";
+                socketEvents["message"] = "message";
+                socketEvents["upgrade"] = "upgrade";
+                socketEvents["close"] = "close";
+                socketEvents["error"] = "error";
+            })(socketEvents || (socketEvents = {}));
+            Socket.startSocket = (listeners) => {
+                console.log("starting socket..");
+                const socket = new WebSocket(App.Relay.relays.damus);
+                socket;
+                console.log(socket);
+                setTimeout(() => {
+                    socket.close();
+                    console.log("socket closed");
+                }, 20000);
+                if (listeners) {
+                    if (listeners.close)
+                        socket.addEventListener(socketEvents.close, listeners.close(socket));
+                    if (listeners.error)
+                        socket.addEventListener(socketEvents.error, listeners.error(socket));
+                    if (listeners.message)
+                        socket.addEventListener(socketEvents.message, listeners.message);
+                    if (listeners.open)
+                        socket.addEventListener(socketEvents.open, listeners.open(socket));
+                }
+            };
+        })(Socket = Relay.Socket || (Relay.Socket = {}));
+        let clientMessages;
+        (function (clientMessages) {
+            clientMessages["event"] = "EVENT";
+            clientMessages["request"] = "REQ";
+            clientMessages["close"] = "CLOSE";
+        })(clientMessages = Relay.clientMessages || (Relay.clientMessages = {}));
+        let serverMessages;
+        (function (serverMessages) {
+            serverMessages["event"] = "EVENT";
+            serverMessages["eose"] = "EOSE";
+            serverMessages["notice"] = "NOTICE";
+        })(serverMessages = Relay.serverMessages || (Relay.serverMessages = {}));
+        Relay.openHandler = (socket) => (ev) => {
+            console.log("Connessione stabilita.");
+            const generatestring = () => `${Math.round(Math.random() * 10 ** 16).toString(16)}${Math.round(Math.random() * 10 ** 16).toString(16)}`;
+            const sub_id = generatestring();
+            const filter = {
+                // authors: [author],
+                kinds: [1],
+                limit: 10,
+            };
+            const tnl_chat = "d6b49c39cd99e892bb745348504574c11c399a8e2d86cbe3bb182f45e0af8fae";
+            const groupMessageFilter = {
+                kinds: [42],
+                limit: 10,
+            };
+            const tnl_group_chat = {
+                kinds: [42],
+                limit: 10,
+                ["#e"]: [tnl_chat],
+            };
+            const message = [clientMessages.request, sub_id, tnl_group_chat];
+            // Invia un messaggio al server
+            socket.send(JSON.stringify(message));
+        };
+        const isStoredData = { value: true };
+        const storedDatas = [];
+        const liveDatas = [];
+        Relay.messageHandler = (sendmessage, saveToLocalStorage) => (userkey) => (message) => {
+            // Riceve un messaggio dal server
+            const data = JSON.parse(message.data);
+            const type = data[0];
+            const subid = data[1];
+            const event = data[2];
+            let clientLogMessages;
+            (function (clientLogMessages) {
+                clientLogMessages["event"] = "Messaggio ricevuto:";
+                clientLogMessages["notice"] = "Receive an error from relay:";
+                clientLogMessages["eose"] = "End of stored events, starting live events:";
+            })(clientLogMessages || (clientLogMessages = {}));
+            // if (type === "EVENT") console.log(clientLogMessages.event, data.content);
+            const handleEvent = (type) => {
+                if (isStoredData.value) {
+                    if (userkey === event.pubkey) {
+                        storedDatas.push({
+                            content: event.content,
+                            from: event.pubkey,
+                            type: "user",
+                        });
+                    }
+                    else {
+                        storedDatas.push({
+                            content: event.content,
+                            from: event.pubkey,
+                            type: "community",
+                        });
+                    }
+                }
+                {
+                    if (event.tags.length) {
+                    }
+                    // console.log(clientLogMessages.event, event.tags, event.content);
+                }
+            };
+            const handleError = () => console.log(clientLogMessages.notice, data);
+            const handleEose = () => {
+                if (sendmessage)
+                    sendmessage(storedDatas.reverse());
+                isStoredData.value = false;
+                console.log(clientLogMessages.eose, data);
+            };
+            let serverMessages;
+            (function (serverMessages) {
+                serverMessages["event"] = "EVENT";
+                serverMessages["eose"] = "EOSE";
+                serverMessages["notice"] = "NOTICE";
+            })(serverMessages || (serverMessages = {}));
+            let map = new Map();
+            map.set(serverMessages.event, handleEvent);
+            map.set(serverMessages.eose, handleEose);
+            map.set(serverMessages.notice, handleError);
+            const action = map.get(type);
+            action(type);
+        };
+    })(Relay = App.Relay || (App.Relay = {}));
 })(App || (App = {}));

@@ -21,7 +21,7 @@ export namespace PopUpMenu {
     const chatWindow = new UIDesign({
       tag: "div",
       id: "chat-window",
-      className: "bg w_300 h_400 flex-cr of_a b_1-s-rl",
+      className: "bg w_300 h_400 flex flex-cr of_a b_1-s-rl p_0-5 box_bb",
     });
     const input = new UIDesign({
       tag: "input",
