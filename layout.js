@@ -112,6 +112,11 @@ app.on("themeChange", () => console.log("color theme changed"));
 app.on("orientationChange", () => console.log("orientation changed"));
 app.on("requestedProvider", () => console.log("provider requested"));
 
+console.log(app.value.isMinWIth768);
+app.on("minWidth768", (e, data) => {
+  console.log(data);
+});
+
 app.on("load", (app) => {
   console.log("loaded");
   const iffee = (condition, cb) => {
