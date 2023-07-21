@@ -7,8 +7,10 @@
   --primary-bg_color-gd: hsla(var(--primary), 7%, 37%, 0.95);
   --primary-bg_color-d: hsla(calc(var(--primary) + 180), 62%, 2%, 0.93);
 
+  --product_mw: 500px;
+
   --testata_h: 50px;
-  --footer_h: 60px;
+  --footer_h: 50px;
 }
 
 * {
@@ -24,7 +26,6 @@ button {
   cursor: pointer;
   padding: 0.2rem 0.8rem;
   border-radius: 0.3rem;
-  background-color: var(--primary-bg_color-l);
 }
 
 p {
@@ -171,6 +172,10 @@ footer {
 
 .w_wkfa {
   width: -webkit-fill-available;
+}
+
+.mw_product {
+  max-width: var(--product_mw);
 }
 
 /* height */
@@ -387,6 +392,10 @@ footer {
   background-color: var(--primary-bg_color-g);
 }
 
+.bg_gd {
+  background-color: var(--primary-bg_color-gd);
+}
+
 .bg_lightGreen {
   background-color: hsla(calc(var(--primary) + 180), 44%, 82%, 0.89);
 }
@@ -433,6 +442,10 @@ footer {
 
 .jc_sb {
   justify-content: space-between;
+}
+
+.ac_c {
+  align-content: center;
 }
 
 .as_c {
@@ -491,7 +504,7 @@ footer {
 
 /* font-size */
 
-.fs_80\% {
+.fs_90\% {
   font-size: 90%;
 }
 
