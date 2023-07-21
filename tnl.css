@@ -6,6 +6,9 @@
   --primary-bg_color-g: hsla(var(--primary), 7%, 57%, 0.95);
   --primary-bg_color-gd: hsla(var(--primary), 7%, 37%, 0.95);
   --primary-bg_color-d: hsla(calc(var(--primary) + 180), 62%, 2%, 0.93);
+
+  --testata_h: 50px;
+  --footer_h: 60px;
 }
 
 * {
@@ -30,7 +33,6 @@ p {
 
 footer {
   width: 100%;
-  height: 80px;
   position: fixed;
   bottom: 0;
   display: flex;
@@ -101,6 +103,10 @@ footer {
   position: sticky;
 }
 
+.top_as_testata {
+  top: var(--testata_h);
+}
+
 .top_0 {
   top: 0px;
 }
@@ -110,7 +116,7 @@ footer {
 }
 
 .top_100 {
-  top: 100px;
+  top: 60px;
 }
 
 .r_0 {
@@ -169,6 +175,14 @@ footer {
 
 /* height */
 
+.h_testata {
+  height: var(--testata_h);
+}
+
+.h_footer {
+  height: var(--footer_h);
+}
+
 .h_100cqh {
   height: 100cqh;
 }
@@ -202,7 +216,7 @@ footer {
 }
 
 .ch_1 {
-  height: calc(100vh - 80px - 100px);
+  height: calc(100vh - var(--footer_h) - var(--testata_h));
 }
 
 /* margin */
@@ -313,6 +327,14 @@ footer {
 
 .p_5-10 {
   padding: 5px 10px;
+}
+
+.p_0-20 {
+  padding: 0 20px;
+}
+
+.p_5-20 {
+  padding: 5px 20px;
 }
 
 .pb_0 {
