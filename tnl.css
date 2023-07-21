@@ -60,18 +60,10 @@ footer {
   flex-direction: column;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 768px) {
   #product {
     margin-left: 10px;
     margin-right: 10px;
-  }
-}
-
-@media (min-width: 768px) {
-  .product-scroll {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
   }
 
   #pop-up-menu {
@@ -432,6 +424,10 @@ footer {
   flex-wrap: wrap;
 }
 
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
 .js_e {
   justify-self: end;
 }
@@ -466,6 +462,10 @@ footer {
 
 .of_a {
   overflow: auto;
+}
+
+.of_xa {
+  overflow-x: auto;
 }
 
 .of_h {
