@@ -18,11 +18,12 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var _App_subscribers;
+var _App_subscribers, _App_eventSubs;
 export class App {
     constructor(value) {
         this.value = value;
-        this.makeEmitCb = (type) => () => this.emit(type);
+        this.makeEmitCb = (type) => (data) => this.emit(type, data);
+        this.makeEmitEventCb = (type) => (data) => this.emit(type, data);
         this.requestProvider = () => __awaiter(this, void 0, void 0, function* () {
             this.emit("requestedProvider");
             try {
@@ -34,6 +35,7 @@ export class App {
             }
         });
         _App_subscribers.set(this, new Map());
+        _App_eventSubs.set(this, new Map());
         this.appendTo = (to, element) => {
             var _a;
             if (to === "body") {
@@ -57,11 +59,14 @@ export class App {
             }
         };
         const mkcb = this.makeEmitCb;
+        const mkecb = this.makeEmitEventCb;
         this.value.userAgent = new App.UserAgent.UserAgentInfo(this.value.window);
         this.value.isWebln = App.WebLN.isWebLN(this.value.window);
-        this.value.window.addEventListener("load", mkcb("load"));
+        this.value.window.addEventListener("load", mkecb("load"));
         this.themeQuery.addEventListener("change", mkcb("themeChange"));
         this.orientationQuery.addEventListener("change", mkcb("orientationChange"));
+        this.value.isMinWIth768 = this.minWidth768Query.matches;
+        this.minWidth768Query.addEventListener("change", mkcb("minWidth768"));
     }
     get themeQuery() {
         return App.getThemeQuery(this.value.window);
@@ -69,25 +74,71 @@ export class App {
     get orientationQuery() {
         return App.getOrientation(this.value.window);
     }
+    get minWidth768Query() {
+        return App.getOrientation(this.value.window);
+    }
     set themeHandler(handler) {
+        // @ts-expect-error
         this.themeQuery.addEventListener("change", handler);
     }
     set orientationHandler(handler) {
+        // @ts-expect-error
+        this.orientationQuery.addEventListener("change", handler);
+    }
+    set minIdth768Handler(handler) {
+        // @ts-expect-error
         this.orientationQuery.addEventListener("change", handler);
     }
     emit(type, data = undefined) {
-        const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
-        if (subscribers)
-            subscribers.forEach((e) => e(this));
-        else
-            throw new Error("no subscriber for this event");
+        if (data) {
+            if ("matches" in data) {
+                const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
+                if (subscribers) {
+                    subscribers.forEach((e) => {
+                        e(this, data);
+                    });
+                }
+                else
+                    throw new Error(`no subscriber for this event: ${type}`);
+            }
+            else {
+                const subscribers = __classPrivateFieldGet(this, _App_eventSubs, "f").get(type);
+                if (subscribers) {
+                    subscribers.forEach((e) => {
+                        e(this, data);
+                    });
+                }
+                else
+                    throw new Error(`no subscriber for this event: ${type}`);
+            }
+        }
+        else {
+            const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
+            if (subscribers) {
+                subscribers.forEach((e) => {
+                    e(this, undefined);
+                });
+            }
+            else
+                throw new Error(`no subscriber for this event: ${type}`);
+        }
     }
     on(type, subscriber) {
         const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
-        if (subscribers)
-            subscribers.push(subscriber);
-        else
-            __classPrivateFieldGet(this, _App_subscribers, "f").set(type, [subscriber]);
+        const eventSub = __classPrivateFieldGet(this, _App_eventSubs, "f").get(type);
+        if (type === "load") {
+            if (eventSub) {
+                eventSub.push(subscriber);
+            }
+            else
+                __classPrivateFieldGet(this, _App_eventSubs, "f").set(type, [subscriber]);
+        }
+        else {
+            if (subscribers)
+                subscribers.push(subscriber);
+            else
+                __classPrivateFieldGet(this, _App_subscribers, "f").set(type, [subscriber]);
+        }
         return this;
     }
     get() {
@@ -96,7 +147,7 @@ export class App {
         string.split("/");
     }
 }
-_App_subscribers = new WeakMap();
+_App_subscribers = new WeakMap(), _App_eventSubs = new WeakMap();
 (function (App) {
     let events;
     (function (events) {
@@ -106,9 +157,11 @@ _App_subscribers = new WeakMap();
         events["themeChange"] = "themeChange";
         events["orientationChange"] = "orientationChange";
         events["requestedProvider"] = "requestedProvider";
+        events["minWidth768"] = "minWidth768";
     })(events = App.events || (App.events = {}));
     App.getThemeQuery = (window) => checkMediaQuery(window)("(prefers-color-scheme: dark)");
     App.getOrientation = (window) => checkMediaQuery(window)("(orientation: landscape)");
+    App.getMinWith768 = (window) => checkMediaQuery(window)("(min-width: 768px)");
     const checkMediaQuery = (window) => (string) => window.matchMedia(string);
     let WebLN;
     (function (WebLN) {

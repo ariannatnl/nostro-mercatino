@@ -2,11 +2,12 @@ import { requestProvider } from "../node_modules/webln/lib/client";
 import { WebLNProvider } from "../node_modules/webln/lib/provider";
 
 declare module "App" {
-  interface Callback<T> {
-    (arg: T): void;
+  interface Callback<T extends Array<any>> {
+    (...args: T): void;
   }
-  interface EventHandler extends Callback<Event | MediaQueryListEvent> {}
-  interface EmitHandler extends Callback<App> {}
+  interface EventHandler extends Callback<[App, Event | undefined]> {}
+  interface EmitHandler
+    extends Callback<[App, undefined | MediaQueryListEvent]> {}
   interface iWindow extends Window {
     WebLN?: { requestProvider: typeof requestProvider };
   }
@@ -17,15 +18,19 @@ export interface iApp {
   theme: "light" | "dark" | "no-preference";
   isWebln: boolean;
   webln: WebLNProvider;
+  isMinWIth768: boolean;
 }
 export class App implements App {
   constructor(public value: iApp) {
     const mkcb = this.makeEmitCb;
+    const mkecb = this.makeEmitEventCb;
     this.value.userAgent = new App.UserAgent.UserAgentInfo(this.value.window);
     this.value.isWebln = App.WebLN.isWebLN(this.value.window);
-    this.value.window.addEventListener("load", mkcb("load"));
+    this.value.window.addEventListener("load", mkecb("load"));
     this.themeQuery.addEventListener("change", mkcb("themeChange"));
     this.orientationQuery.addEventListener("change", mkcb("orientationChange"));
+    this.value.isMinWIth768 = this.minWidth768Query.matches;
+    this.minWidth768Query.addEventListener("change", mkcb("minWidth768"));
   }
   get themeQuery(): MediaQueryList {
     return App.getThemeQuery(this.value.window);
@@ -33,13 +38,27 @@ export class App implements App {
   get orientationQuery(): MediaQueryList {
     return App.getOrientation(this.value.window);
   }
+  get minWidth768Query(): MediaQueryList {
+    return App.getOrientation(this.value.window);
+  }
   set themeHandler(handler: EventHandler) {
+    // @ts-expect-error
     this.themeQuery.addEventListener("change", handler);
   }
   set orientationHandler(handler: EventHandler) {
+    // @ts-expect-error
     this.orientationQuery.addEventListener("change", handler);
   }
-  makeEmitCb = (type: keyof typeof App.events) => () => this.emit(type);
+  set minIdth768Handler(handler: EventHandler) {
+    // @ts-expect-error
+    this.orientationQuery.addEventListener("change", handler);
+  }
+  makeEmitCb =
+    (type: keyof typeof App.events) => (data: MediaQueryListEvent | Event) =>
+      this.emit(type, data);
+  makeEmitEventCb =
+    (type: keyof typeof App.events) => (data: MediaQueryListEvent | Event) =>
+      this.emit(type, data);
   requestProvider = async () => {
     this.emit("requestedProvider");
     try {
@@ -50,15 +69,51 @@ export class App implements App {
     }
   };
   #subscribers = new Map<keyof typeof App.events, EmitHandler[]>();
-  emit(type: keyof typeof App.events, data = undefined) {
-    const subscribers = this.#subscribers.get(type);
-    if (subscribers) subscribers.forEach((e) => e(this));
-    else throw new Error("no subscriber for this event");
+  #eventSubs = new Map<keyof typeof App.events, EventHandler[]>();
+  emit(
+    type: keyof typeof App.events,
+    data: undefined | MediaQueryListEvent | Event = undefined
+  ) {
+    if (data) {
+      if ("matches" in data) {
+        const subscribers = this.#subscribers.get(type);
+        if (subscribers) {
+          subscribers.forEach((e) => {
+            e(this, data);
+          });
+        } else throw new Error(`no subscriber for this event: ${type}`);
+      } else {
+        const subscribers = this.#eventSubs.get(type);
+        if (subscribers) {
+          subscribers.forEach((e) => {
+            e(this, data);
+          });
+        } else throw new Error(`no subscriber for this event: ${type}`);
+      }
+    } else {
+      const subscribers = this.#subscribers.get(type);
+      if (subscribers) {
+        subscribers.forEach((e) => {
+          e(this, undefined);
+        });
+      } else throw new Error(`no subscriber for this event: ${type}`);
+    }
   }
-  on(type: keyof typeof App.events, subscriber: (arg: App) => void) {
+  on(type: "load", subscriber: EventHandler): this;
+  on(
+    type: keyof typeof App.events,
+    subscriber: EmitHandler | EventHandler
+  ): this {
     const subscribers = this.#subscribers.get(type);
-    if (subscribers) subscribers.push(subscriber);
-    else this.#subscribers.set(type, [subscriber]);
+    const eventSub = this.#eventSubs.get(type);
+    if (type === "load") {
+      if (eventSub) {
+        eventSub.push(subscriber as EventHandler);
+      } else this.#eventSubs.set(type, [subscriber as EventHandler]);
+    } else {
+      if (subscribers) subscribers.push(subscriber as EmitHandler);
+      else this.#subscribers.set(type, [subscriber as EmitHandler]);
+    }
     return this;
   }
   appendTo = (to: "body" | "layout", element: HTMLElement) => {
@@ -95,11 +150,14 @@ export namespace App {
     themeChange = "themeChange",
     orientationChange = "orientationChange",
     requestedProvider = "requestedProvider",
+    minWidth768 = "minWidth768",
   }
   export const getThemeQuery = (window: Window) =>
     checkMediaQuery(window)("(prefers-color-scheme: dark)");
   export const getOrientation = (window: Window) =>
     checkMediaQuery(window)("(orientation: landscape)");
+  export const getMinWith768 = (window: Window) =>
+    checkMediaQuery(window)("(min-width: 768px)");
   const checkMediaQuery = (window: Window) => (string: string) =>
     window.matchMedia(string);
 
