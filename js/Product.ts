@@ -68,7 +68,7 @@ export namespace Product {
     const details_ = new UIDesign({
       tag: "div",
       id: "details",
-      className: "flex flex-wrap",
+      className: "flex flex-wrap fs_80%",
     }).setHtmlAttribute("data-tags", dataTag);
 
     tags
