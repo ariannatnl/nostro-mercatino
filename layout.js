@@ -112,12 +112,6 @@ app.on("themeChange", () => console.log("color theme changed"));
 app.on("orientationChange", () => console.log("orientation changed"));
 app.on("requestedProvider", () => console.log("provider requested"));
 
-console.log(app.minWidth768Query);
-app.on("minWidth768", (e, data) => {
-  console.log(data);
-  console.log(productScroll.className);
-});
-
 app.on("load", (app) => {
   console.log("loaded");
   const iffee = (condition, cb) => {
@@ -203,6 +197,16 @@ chatSection.style.display = "none";
 
 relay.on(createTextElement);
 // app.onLoadHander = handleOnLoad;
+
+const minWidth768Handler = (_, data) => {
+  const DEF_CLASS = "flex flex-column flex-wrap ac_c";
+  const LARGE_CLASS = "flex flex-row flex-nowrap of_xa";
+  if (data.matches) productScroll.className = LARGE_CLASS;
+  else productScroll.className = DEF_CLASS;
+  console.log(productScroll.className);
+};
+app.on("minWidth768", minWidth768Handler);
+minWidth768Handler(undefined, app.minWidth768Query);
 
 closeIcon.addEventListener("click", closeChat);
 groupChat.addEventListener("click", showChat);
