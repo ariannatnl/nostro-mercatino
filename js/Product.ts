@@ -32,7 +32,8 @@ export namespace Product {
     const product_ = new UIDesign({
       tag: "div",
       id: "product",
-      className: "b_1-s-gd flex flex-column p_10 bg ai_c mb_10 brad_4",
+      className:
+        "b_1-s-gd flex flex-column p_10 bg ai_c mb_10 brad_4 mw_product",
     });
 
     const filter = new UIDesign({

@@ -46,17 +46,18 @@ export class Footer {
         const playPauseBtnDesign = new UIDesign({
             tag: "button",
             id: "play-pause-button",
-            className: "bg_l c_d m_10-0",
+            className: "bg_l c_d fs_90%",
             // @ariannatnl non so come si usa questa string
         }).setInnerText("▶︎");
         const nextBtnDesign = new UIDesign({
             tag: "button",
             id: "next-button",
-            className: "bg_l c_d",
+            className: "bg_l c_d fs_90%",
         }).setInnerText("Next");
         const musicplayerDesign = new UIDesign({
             tag: "div",
-            className: "l_-9999 flex flex-row w_wkfa ai_c jc_sb p_0-20 b_1-s-rl brad_4",
+            id: "music-player",
+            className: "bg_gd l_-9999 flex flex-row w_wkfa ai_c jc_sb p_0-20 b_1-s-gd brad_4",
         })
             .addChild(audioPlayerDesign.addChild(source1).addChild(source2).addChild(source3))
             .addChild(trackTitleDesign)
@@ -65,7 +66,7 @@ export class Footer {
             .addChild(nextBtnDesign);
         const groupChatDesign = new UIDesign({
             tag: "button",
-            className: "bg_l c_d h_fc as_c",
+            className: "bg_l c_d h_fc as_c fs_90%",
             id: "group-chat",
         }).setInnerText("chat");
         const buttonContainer = new UIDesign({
@@ -75,7 +76,7 @@ export class Footer {
         });
         const footerDesign = new UIDesign({
             tag: "footer",
-            className: "footer h_footer bg box_bb p_0-20",
+            className: "footer h_footer bg  box_bb p_5-20",
         })
             .addChild(musicplayerDesign)
             .addChild(buttonContainer.addChild(groupChatDesign));
