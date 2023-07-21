@@ -112,9 +112,10 @@ app.on("themeChange", () => console.log("color theme changed"));
 app.on("orientationChange", () => console.log("orientation changed"));
 app.on("requestedProvider", () => console.log("provider requested"));
 
-console.log(app.value.isMinWIth768);
+console.log(app.minWidth768Query);
 app.on("minWidth768", (e, data) => {
   console.log(data);
+  console.log(productScroll.className);
 });
 
 app.on("load", (app) => {
@@ -156,6 +157,7 @@ if (!productContainer.children) throw new Error("no header");
 const [tagsDropdown, productScrollDesing] = productContainer.children;
 if (!tagsDropdown.children) throw new Error("no header");
 const [selectDesign] = tagsDropdown.children;
+const productScroll = productScrollDesing.element;
 app.appendTo("layout", productContainer.element);
 
 //
