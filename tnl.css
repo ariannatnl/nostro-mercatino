@@ -47,13 +47,6 @@ footer {
   overflow: auto;
 }
 
-.product-scroll {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: center;
-}
-
 #pop-up-menu {
   width: 100%;
   height: 100%;
@@ -71,13 +64,6 @@ footer {
   #product {
     margin-left: 10px;
     margin-right: 10px;
-  }
-
-  .product-scroll {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    flex-wrap: nowrap;
   }
 
   #pop-up-menu {
@@ -438,6 +424,10 @@ footer {
   flex-wrap: wrap;
 }
 
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
 .js_e {
   justify-self: end;
 }
@@ -472,6 +462,10 @@ footer {
 
 .of_a {
   overflow: auto;
+}
+
+.of_xa {
+  overflow-x: auto;
 }
 
 .of_h {
