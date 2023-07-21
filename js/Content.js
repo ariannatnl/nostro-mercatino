@@ -40,7 +40,7 @@ export class Content {
         const prdScroll = new UIDesign({
             tag: "div",
             id: "product-scroll",
-            className: "product-scroll",
+            className: "",
         });
         for (let k in prodotti) {
             prdScroll.addChild(prodotti[k].tree);
