@@ -39,7 +39,7 @@ export class App implements App {
     return App.getOrientation(this.value.window);
   }
   get minWidth768Query(): MediaQueryList {
-    return App.getOrientation(this.value.window);
+    return App.getMinWith768(this.value.window);
   }
   set themeHandler(handler: EventHandler) {
     // @ts-expect-error
@@ -51,7 +51,7 @@ export class App implements App {
   }
   set minIdth768Handler(handler: EventHandler) {
     // @ts-expect-error
-    this.orientationQuery.addEventListener("change", handler);
+    this.minWidth768Query.addEventListener("change", handler);
   }
   makeEmitCb =
     (type: keyof typeof App.events) => (data: MediaQueryListEvent | Event) =>
@@ -74,6 +74,7 @@ export class App implements App {
     type: keyof typeof App.events,
     data: undefined | MediaQueryListEvent | Event = undefined
   ) {
+    console.log("called");
     if (data) {
       if ("matches" in data) {
         const subscribers = this.#subscribers.get(type);

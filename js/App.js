@@ -75,7 +75,7 @@ export class App {
         return App.getOrientation(this.value.window);
     }
     get minWidth768Query() {
-        return App.getOrientation(this.value.window);
+        return App.getMinWith768(this.value.window);
     }
     set themeHandler(handler) {
         // @ts-expect-error
@@ -87,9 +87,10 @@ export class App {
     }
     set minIdth768Handler(handler) {
         // @ts-expect-error
-        this.orientationQuery.addEventListener("change", handler);
+        this.minWidth768Query.addEventListener("change", handler);
     }
     emit(type, data = undefined) {
+        console.log("called");
         if (data) {
             if ("matches" in data) {
                 const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
