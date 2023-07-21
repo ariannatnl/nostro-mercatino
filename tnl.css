@@ -467,6 +467,12 @@ footer {
   font-weight: bold;
 }
 
+/* font-size */
+
+.fs_80\% {
+  font-size: 90%;
+}
+
 /* decorations */
 
 
