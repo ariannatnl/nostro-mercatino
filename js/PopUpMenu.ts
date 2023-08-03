@@ -21,7 +21,8 @@ export namespace PopUpMenu {
     const chatWindow = new UIDesign({
       tag: "div",
       id: "chat-window",
-      className: "bg w_300 h_400 flex flex-cr of_a b_1-s-rl p_0-5 box_bb",
+      className:
+        "bg w_300 h_400 flex flex-cr of_a b_1-s-rl p_0-5 box_bb",
     });
     const input = new UIDesign({
       tag: "input",
@@ -44,10 +45,11 @@ export namespace PopUpMenu {
       "dis_none pos_a bottom_0 w_100% h_100% bkdf_blur-5 box_bb jc_c ai_c";
     const popUpMenuClassSmall =
       "flex flex-column bg w_320 h_420 pos_f p_20 jc_c ai_c bottom_20 r_20 z_9999 bkdf_blur-5";
+    const popUpMenuNone = `dis_none`;
     const popUpMenu = new UIDesign({
       tag: "div",
       id: "pop-up-menu",
-      className: popUpMenuClassSmall,
+      className: popUpMenuNone,
     })
       .addChild(closeIcon)
       .addChild(chatWindow)

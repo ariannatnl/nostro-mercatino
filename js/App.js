@@ -34,6 +34,16 @@ export class App {
                 this.emit("no-provider");
             }
         });
+        this.checkNostr = () => {
+            console.log("checknostr");
+            if (window.nostr) {
+                console.log("found nostr");
+                this.emit("nostr", window.nostr);
+            }
+            else {
+                console.log("nostr not found");
+            }
+        };
         _App_subscribers.set(this, new Map());
         _App_eventSubs.set(this, new Map());
         this.appendTo = (to, element) => {
@@ -44,7 +54,8 @@ export class App {
                     .appendChild(element);
             }
             else {
-                (_a = this.value.window.document.getElementById(to)) === null || _a === void 0 ? void 0 : _a.appendChild(element);
+                (_a = this.value.window.document
+                    .getElementById(to)) === null || _a === void 0 ? void 0 : _a.appendChild(element);
             }
         };
         this.appendToBody = (element) => {
@@ -64,7 +75,8 @@ export class App {
         this.value.userAgent = new App.UserAgent.UserAgentInfo(this.value.window);
         this.value.isWebln = App.WebLN.isWebLN(this.value.window);
         this.value.window.addEventListener("load", mkecb("load"));
-        this.themeQuery.addEventListener("change", mkcb("themeChange"));
+        this.value.window.addEventListener("DOMContentLoaded", mkcb("dom"));
+        this.themeQuery.addEventListener("change", mkecb("themeChange"));
         this.orientationQuery.addEventListener("change", mkcb("orientationChange"));
         this.value.isMinWIth768 = this.minWidth768Query.matches;
         this.minWidth768Query.addEventListener("change", mkcb("minWidth768Change"));
@@ -115,7 +127,7 @@ export class App {
     on(type, subscriber) {
         const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
         const eventSub = __classPrivateFieldGet(this, _App_eventSubs, "f").get(type);
-        if (type === "load") {
+        if (type === "load" || type === "dom") {
             if (eventSub) {
                 eventSub.push(subscriber);
             }
@@ -141,9 +153,11 @@ _App_subscribers = new WeakMap(), _App_eventSubs = new WeakMap(), _App_startSock
 (function (App) {
     let events;
     (function (events) {
+        events["dom"] = "dom";
         events["load"] = "load";
         events["no-provider"] = "no-provider";
         events["got-provider"] = "got-provider";
+        events["nostr"] = "nostr";
         events["themeChange"] = "themeChange";
         events["orientationChange"] = "orientationChange";
         events["minWidth768Change"] = "minWidth768Change";
@@ -156,7 +170,7 @@ _App_subscribers = new WeakMap(), _App_eventSubs = new WeakMap(), _App_startSock
     const checkMediaQuery = (window) => (string) => window.matchMedia(string);
     let WebLN;
     (function (WebLN) {
-        WebLN.isWebLN = (window) => (window.WebLN ? true : false);
+        WebLN.isWebLN = (window) => window.WebLN ? true : false;
     })(WebLN = App.WebLN || (App.WebLN = {}));
     let UserAgent;
     (function (UserAgent) {
@@ -267,7 +281,11 @@ _App_subscribers = new WeakMap(), _App_eventSubs = new WeakMap(), _App_startSock
                 limit: 10,
                 ["#e"]: [tnl_chat],
             };
-            const message = [clientMessages.request, sub_id, tnl_group_chat];
+            const message = [
+                clientMessages.request,
+                sub_id,
+                tnl_group_chat,
+            ];
             // Invia un messaggio al server
             socket.send(JSON.stringify(message));
         };
