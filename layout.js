@@ -66,7 +66,9 @@ function handleNextButtonClick() {
   const currentSource = audioPlayer.currentSrc;
   const sources = audioPlayer.getElementsByTagName("source");
   let nextIndex =
-    Array.from(sources).findIndex((source) => source.src === currentSource) + 1;
+    Array.from(sources).findIndex(
+      (source) => source.src === currentSource
+    ) + 1;
   if (nextIndex >= sources.length) {
     nextIndex = 0;
   }
@@ -120,7 +122,8 @@ function createTextElement(messageText, usertype) {
   });
   var messageContainer = document.createElement("div");
   if (usertype === "user") {
-    const className = "flex bg_bl c_d p_10 mb_5 ml_80 brad_5-5-0-5 jc_e";
+    const className =
+      "flex bg_bl c_d p_10 mb_5 ml_80 brad_5-5-0-5 jc_e";
     messageContainer.className = className;
     newmessageContainer.addChild(text).setClassName(className);
   } else {
@@ -132,11 +135,17 @@ function createTextElement(messageText, usertype) {
       .setClassName(className);
   }
   messageContainer.textContent = messageText;
-  chatWindow.insertBefore(newmessageContainer.element, chatWindow.firstChild);
+  chatWindow.insertBefore(
+    newmessageContainer.element,
+    chatWindow.firstChild
+  );
   messageInput.value = "";
 }
 
-const app = new App({ window: window, nodeslist: UIDesign.nodeslist });
+const app = new App({
+  window: window,
+  nodeslist: UIDesign.nodeslist,
+});
 console.log(UIDesign.nodeslist);
 
 const bg_color = new UIDesign({
@@ -148,8 +157,12 @@ app.appendTo("layout", bg_color.element);
 app.setBodyClassName("m_0 w_100vw h_100vh");
 
 app.on("themeChange", () => console.log("color theme changed"));
-app.on("orientationChange", () => console.log("orientation changed"));
-app.on("requestedProvider", () => console.log("provider requested"));
+app.on("orientationChange", () =>
+  console.log("orientation changed")
+);
+app.on("requestedProvider", () =>
+  console.log("provider requested")
+);
 app.get();
 app.on("load", (app) => {
   console.log("loaded");
@@ -157,7 +170,8 @@ app.on("load", (app) => {
     if (condition) cb();
   };
   app.requestProvider();
-  const keydownHandler = (event) => iffee(event.keyCode === 13, sendMessage);
+  const keydownHandler = (event) =>
+    iffee(event.keyCode === 13, sendMessage);
   messageInput.addEventListener("keydown", keydownHandler);
 });
 
@@ -200,7 +214,9 @@ app.appendTo("layout", testataDesign.element);
 
 // prodcontainer
 const productContainer = new Content({ prodotti }).tree;
-const productScroll = app.get("product-container/product-scroll").element;
+const productScroll = app.get(
+  "product-container/product-scroll"
+).element;
 app.appendTo("layout", productContainer.element);
 
 //
@@ -222,7 +238,8 @@ const groupChatDesignPath = "footer/button-container";
 const groupChat = app.get(groupChatDesignPath).element;
 const buttonsDesignPath = "pop-up-menu/input-container/chat-send";
 const chatSend = app.get(buttonsDesignPath).element;
-const selectDesignPath = "product-container/tags-dropdown/tags-select";
+const selectDesignPath =
+  "product-container/tags-dropdown/tags-select";
 const tagsSelect = app.get(selectDesignPath).element;
 
 const chatSection = popUpMenuDesign.element;
@@ -233,7 +250,8 @@ const trackTitleDesignPath = "footer/music-player/track-title";
 const trackTitle = app.get(trackTitleDesignPath).element;
 const trackArtistDesignPath = "footer/music-player/track-artist";
 const trackArtist = app.get(trackArtistDesignPath).element;
-const playPauseBtnDesignPath = "footer/music-player/play-pause-button";
+const playPauseBtnDesignPath =
+  "footer/music-player/play-pause-button";
 const playPauseButton = app.get(playPauseBtnDesignPath).element;
 const nextBtnDesignPath = "footer/music-player/next-button";
 const nextButton = app.get(nextBtnDesignPath).element;
@@ -250,7 +268,8 @@ const minWidth768Handler = (_, data) => {
       "flex flex-column bg w_100% h_100% pos_a top_0 p_20 bkdf_blur-5 box_bb jc_c ai_c";
     const popUpMenuClassSmall =
       "flex flex-column bg w_100% h_100% pos_a top_0 p_20 jc_c ai_c bottom_20 r_20 z_9999 bkdf_blur-5";
-    if (data.matches) popUpMenuDesign.element.className = popUpMenuClassBig;
+    if (data.matches)
+      popUpMenuDesign.element.className = popUpMenuClassBig;
     else popUpMenuDesign.element.className = popUpMenuClassBig;
   }, 200);
 };
