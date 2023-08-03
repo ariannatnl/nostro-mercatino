@@ -27,17 +27,19 @@ export class App {
         this.requestProvider = () => __awaiter(this, void 0, void 0, function* () {
             this.emit("requestedProvider");
             try {
-                this.value.webln = yield window.WebLN.requestProvider();
-                this.emit("got-provider");
+                setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                    globalThis.that = window.WebLN.requestProvider;
+                    this.value.webln = yield window.WebLN.requestProvider();
+                    this.emit("got-provider");
+                }), 100);
             }
             catch (error) {
+                console.log("passed here too");
                 this.emit("no-provider");
             }
         });
         this.checkNostr = () => {
-            console.log("checknostr");
             if (window.nostr) {
-                console.log("found nostr");
                 this.emit("nostr", window.nostr);
             }
             else {
@@ -127,7 +129,7 @@ export class App {
     on(type, subscriber) {
         const subscribers = __classPrivateFieldGet(this, _App_subscribers, "f").get(type);
         const eventSub = __classPrivateFieldGet(this, _App_eventSubs, "f").get(type);
-        if (type === "load" || type === "dom") {
+        if (type === "load" || type === "dom" || type === "nostr") {
             if (eventSub) {
                 eventSub.push(subscriber);
             }
