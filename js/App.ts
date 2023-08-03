@@ -9,15 +9,19 @@ declare module "App" {
   interface Callback<T extends Array<any>> {
     (...args: T): void;
   }
-  interface EventHandler extends Callback<[App, Event | undefined]> {}
+  interface EventHandler
+    extends Callback<[App, Event | undefined]> {}
   interface EmitHandler
     extends Callback<[App, undefined | MediaQueryListEvent]> {}
   interface iWindow extends Window {
     WebLN?: { requestProvider: typeof requestProvider };
   }
-  interface OpenHandler extends GenericCallback<WebSocket, Event, any> {}
-  interface ErrorHandler extends GenericCallback<WebSocket, Event, any> {}
-  interface CloseHandler extends GenericCallback<WebSocket, CloseEvent, any> {}
+  interface OpenHandler
+    extends GenericCallback<WebSocket, Event, any> {}
+  interface ErrorHandler
+    extends GenericCallback<WebSocket, Event, any> {}
+  interface CloseHandler
+    extends GenericCallback<WebSocket, CloseEvent, any> {}
   interface MessageHandler
     extends GenericCallback<WebSocket, MessageEvent<any>, any> {}
 }
@@ -34,13 +38,28 @@ export class App implements App {
   constructor(public value: iApp) {
     const mkcb = this.makeEmitCb;
     const mkecb = this.makeEmitEventCb;
-    this.value.userAgent = new App.UserAgent.UserAgentInfo(this.value.window);
+    this.value.userAgent = new App.UserAgent.UserAgentInfo(
+      this.value.window
+    );
     this.value.isWebln = App.WebLN.isWebLN(this.value.window);
     this.value.window.addEventListener("load", mkecb("load"));
-    this.themeQuery.addEventListener("change", mkcb("themeChange"));
-    this.orientationQuery.addEventListener("change", mkcb("orientationChange"));
+    this.value.window.addEventListener(
+      "DOMContentLoaded",
+      mkcb("dom")
+    );
+    this.themeQuery.addEventListener(
+      "change",
+      mkecb("themeChange")
+    );
+    this.orientationQuery.addEventListener(
+      "change",
+      mkcb("orientationChange")
+    );
     this.value.isMinWIth768 = this.minWidth768Query.matches;
-    this.minWidth768Query.addEventListener("change", mkcb("minWidth768Change"));
+    this.minWidth768Query.addEventListener(
+      "change",
+      mkcb("minWidth768Change")
+    );
   }
   get themeQuery(): MediaQueryList {
     return App.getThemeQuery(this.value.window);
@@ -52,18 +71,32 @@ export class App implements App {
     return App.getMinWith768(this.value.window);
   }
   makeEmitCb =
-    (type: keyof typeof App.events) => (data: MediaQueryListEvent | Event) =>
+    (type: keyof typeof App.events) =>
+    (data: MediaQueryListEvent | Event) =>
       this.emit(type, data);
   makeEmitEventCb =
-    (type: keyof typeof App.events) => (data: MediaQueryListEvent | Event) =>
+    (type: keyof typeof App.events) =>
+    (data: MediaQueryListEvent | Event) =>
       this.emit(type, data);
   requestProvider = async () => {
     this.emit("requestedProvider");
     try {
-      this.value.webln = await (window as iWindow).WebLN!.requestProvider();
+      this.value.webln = await (
+        window as iWindow
+      ).WebLN!.requestProvider();
       this.emit("got-provider");
     } catch (error) {
       this.emit("no-provider");
+    }
+  };
+  checkNostr = () => {
+    console.log("checknostr");
+
+    if ((window as any).nostr) {
+      console.log("found nostr");
+      this.emit("nostr", (window as any).nostr);
+    } else {
+      console.log("nostr not found");
     }
   };
   #subscribers = new Map<keyof typeof App.events, EmitHandler[]>();
@@ -79,14 +112,16 @@ export class App implements App {
           subscribers.forEach((e) => {
             e(this, data);
           });
-        } else throw new Error(`no subscriber for this event: ${type}`);
+        } else
+          throw new Error(`no subscriber for this event: ${type}`);
       } else {
         const subscribers = this.#eventSubs.get(type);
         if (subscribers) {
           subscribers.forEach((e) => {
             e(this, data);
           });
-        } else throw new Error(`no subscriber for this event: ${type}`);
+        } else
+          throw new Error(`no subscriber for this event: ${type}`);
       }
     } else {
       const subscribers = this.#subscribers.get(type);
@@ -94,7 +129,8 @@ export class App implements App {
         subscribers.forEach((e) => {
           e(this, undefined);
         });
-      } else throw new Error(`no subscriber for this event: ${type}`);
+      } else
+        throw new Error(`no subscriber for this event: ${type}`);
     }
   }
   on(type: "load", subscriber: EventHandler): this;
@@ -105,10 +141,11 @@ export class App implements App {
   ): this {
     const subscribers = this.#subscribers.get(type);
     const eventSub = this.#eventSubs.get(type);
-    if (type === "load") {
+    if (type === "load" || type === "dom") {
       if (eventSub) {
         eventSub.push(subscriber as EventHandler);
-      } else this.#eventSubs.set(type, [subscriber as EventHandler]);
+      } else
+        this.#eventSubs.set(type, [subscriber as EventHandler]);
     } else {
       if (subscribers) subscribers.push(subscriber as EmitHandler);
       else this.#subscribers.set(type, [subscriber as EmitHandler]);
@@ -121,7 +158,9 @@ export class App implements App {
         .getElementsByTagName(to)[0]
         .appendChild(element);
     } else {
-      this.value.window.document.getElementById(to)?.appendChild(element);
+      this.value.window.document
+        .getElementById(to)
+        ?.appendChild(element);
     }
   };
   appendToBody = (element: HTMLElement) => {
@@ -136,7 +175,9 @@ export class App implements App {
     }
   };
   get(path: string): UIDesign[] | UIDesign {
-    const filtered = this.value.nodeslist.filter((e) => e.path === path);
+    const filtered = this.value.nodeslist.filter(
+      (e) => e.path === path
+    );
     if (filtered.length === 1) return filtered[0];
     return this.value.nodeslist.filter((e) => e.path === path);
   }
@@ -144,9 +185,11 @@ export class App implements App {
 }
 export namespace App {
   export enum events {
+    dom = "dom",
     load = "load",
     ["no-provider"] = "no-provider",
     ["got-provider"] = "got-provider",
+    nostr = "nostr",
     themeChange = "themeChange",
     orientationChange = "orientationChange",
     minWidth768Change = "minWidth768Change",
@@ -163,7 +206,8 @@ export namespace App {
     window.matchMedia(string);
 
   export namespace WebLN {
-    export const isWebLN = (window: iWindow) => (window.WebLN ? true : false);
+    export const isWebLN = (window: iWindow) =>
+      window.WebLN ? true : false;
   }
 
   export namespace UserAgent {
@@ -283,9 +327,15 @@ export namespace App {
               listeners.error(socket)
             );
           if (listeners.message)
-            socket.addEventListener(socketEvents.message, listeners.message);
+            socket.addEventListener(
+              socketEvents.message,
+              listeners.message
+            );
           if (listeners.open)
-            socket.addEventListener(socketEvents.open, listeners.open(socket));
+            socket.addEventListener(
+              socketEvents.open,
+              listeners.open(socket)
+            );
         }
       };
     }
@@ -306,9 +356,9 @@ export namespace App {
       (socket) => (ev) => {
         console.log("Connessione stabilita.");
         const generatestring = () =>
-          `${Math.round(Math.random() * 10 ** 16).toString(16)}${Math.round(
-            Math.random() * 10 ** 16
-          ).toString(16)}`;
+          `${Math.round(Math.random() * 10 ** 16).toString(
+            16
+          )}${Math.round(Math.random() * 10 ** 16).toString(16)}`;
 
         const sub_id = generatestring();
         const filter = {
@@ -327,7 +377,11 @@ export namespace App {
           limit: 10,
           ["#e"]: [tnl_chat],
         };
-        const message = [clientMessages.request, sub_id, tnl_group_chat];
+        const message = [
+          clientMessages.request,
+          sub_id,
+          tnl_group_chat,
+        ];
         // Invia un messaggio al server
         socket.send(JSON.stringify(message));
       };
@@ -339,7 +393,9 @@ export namespace App {
       printMessage?: (prop: UIMessage[]) => void,
       saveToLocalStorage?: (data: UIMessage[]) => void
     ) => (userkey?: string) => MessageHandler =
-      (sendmessage, saveToLocalStorage) => (userkey) => (message) => {
+      (sendmessage, saveToLocalStorage) =>
+      (userkey) =>
+      (message) => {
         // Riceve un messaggio dal server
 
         const data = JSON.parse((message as any).data) as [
@@ -379,7 +435,8 @@ export namespace App {
             // console.log(clientLogMessages.event, event.tags, event.content);
           }
         };
-        const handleError = () => console.log(clientLogMessages.notice, data);
+        const handleError = () =>
+          console.log(clientLogMessages.notice, data);
 
         const handleEose = () => {
           if (sendmessage) sendmessage(storedDatas.reverse());

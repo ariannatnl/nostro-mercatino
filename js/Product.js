@@ -47,11 +47,11 @@ export class Product {
             className: "flex flex-wrap fs_80%",
         }).setHtmlAttribute("data-tags", dataTag);
         tags
-            .map((t) => {
+            .map((t, i) => {
             const tag = new UIDesign({
                 tag: "p",
-                id: "product-tag",
-                className: "brad_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0 c_d",
+                id: "product-tag" + i,
+                className: "brad_5 bg_lightGreen p_2 mt_0 mr_3 mb_3 ml_0 c_d w_maxcont",
             }).setInnerText(t);
             return tag;
         })

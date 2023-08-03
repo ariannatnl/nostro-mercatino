@@ -31,7 +31,7 @@ export class PopUpLogIn {
             tag: "div",
             id: "text-login",
             className: "text-login",
-        }).setInnerText("Our chat is created on an open protocol, named “Nostr”, a new kind of censorship-resistant social networksUsers can identify themselves  on every Nostr apps with their private and public key. The Alby Extension  just helps you to conveniently manage your private key and to interact with other users acrossthe network instead of handing it over to web apps. Get now your access to open web =>");
+        }).setInnerText("Our chat is created on an open protocol, named “Nostr”, a new kind of censorship-resistant social networksUsers can identify themselves  on every Nostr apps with their private and public key. Every The Alby Extension  just helps you to conveniently manage your private key and to interact with other users acrossthe network instead of handing it over to web apps. Get now your access to open web =>");
         textLogIn.addChild(closeIcon).addChild(logInWindow);
         logInWindow.addChild(textLogIn);
         return popUpLogIn;

@@ -53,7 +53,7 @@ export class Footer {
         const trackArtistDesign = new UIDesign({
             tag: "p",
             id: "track-artist",
-            className: "bg m_10-0",
+            className: "bg m_10-0 w_maxcont",
         });
         const playPauseBtnDesign = new UIDesign({
             tag: "button",

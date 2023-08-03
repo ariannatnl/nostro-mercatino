@@ -28,10 +28,6 @@ button {
   border-radius: 0.3rem;
 }
 
-p {
-  width: max-content;
-}
-
 footer {
   width: 100%;
   position: fixed;
@@ -156,6 +152,10 @@ footer {
 
 .w_wkfa {
   width: -webkit-fill-available;
+}
+
+.w_maxcont {
+  width: max-content;
 }
 
 .w_1rem {
@@ -576,6 +576,10 @@ footer {
 
 .fs_90\% {
   font-size: 90%;
+}
+
+.fs_200\% {
+  font-size: 200%;
 }
 
 /* decorations */

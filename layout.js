@@ -7,21 +7,14 @@ import { App } from "./js/App.js";
 import { prodotti } from "./db/prodotti.js";
 
 function closeChat() {
-  chatSection.style.display = "none";
-  layout.style.filter = "none";
-  var footer = document.getElementsByClassName("footer")[0];
-  footer.style.pointerEvents = "auto";
+  const popUpMenuNone = `dis_none`;
+  popUpMenuDesign.element.className = popUpMenuNone;
 }
 
 function showChat() {
-  chatSection.style.display = "flex";
-
-  var layout = document.getElementsByClassName("layout")[0];
-  if (window.innerWidth <= 768) {
-    layout.style.filter = "blur(5px)";
-  }
-  var footer = document.getElementsByClassName("footer")[0];
-  footer.style.pointerEvents = "none";
+  const popUpMenuClassBig =
+    "flex flex-column bg w_100% h_100% pos_a top_0 p_20 bkdf_blur-5 box_bb jc_c ai_c fs_200%";
+  popUpMenuDesign.element.className = popUpMenuClassBig;
 }
 
 function sendMessage(props) {
@@ -99,11 +92,6 @@ const getkey = async () => {
     });
   }, 1000);
 };
-if (window.nostr) {
-  getkey();
-} else {
-  console.log("no nostr");
-}
 
 function createTextElement(messageText, usertype) {
   var usericon = new UIDesign({
@@ -114,7 +102,7 @@ function createTextElement(messageText, usertype) {
   var text = new UIDesign({
     tag: "p",
     id: "message-text",
-    className: "m_0 c_d",
+    className: "m_0 c_d w_maxcont",
   }).setInnerText(messageText);
   const newmessageContainer = new UIDesign({
     tag: "div",
@@ -146,7 +134,6 @@ const app = new App({
   window: window,
   nodeslist: UIDesign.nodeslist,
 });
-console.log(UIDesign.nodeslist);
 
 const bg_color = new UIDesign({
   tag: "div",
@@ -157,25 +144,33 @@ app.appendTo("layout", bg_color.element);
 app.setBodyClassName("m_0 w_100vw h_100vh");
 
 app.on("themeChange", () => console.log("color theme changed"));
+
 app.on("orientationChange", () =>
   console.log("orientation changed")
 );
+
 app.on("requestedProvider", () =>
   console.log("provider requested")
 );
-app.get();
+
+app.on("dom", () => {
+  console.log("dom ready");
+  app.checkNostr();
+  app.requestProvider();
+});
+
 app.on("load", (app) => {
   console.log("loaded");
   const iffee = (condition, cb) => {
     if (condition) cb();
   };
-  app.requestProvider();
   const keydownHandler = (event) =>
     iffee(event.keyCode === 13, sendMessage);
   messageInput.addEventListener("keydown", keydownHandler);
 });
 
 app.on("no-provider", () => {
+  console.log("no provider");
   const closeIcon = new UIDesign({
     tag: "div",
     id: "close-icon",
@@ -186,20 +181,35 @@ app.on("no-provider", () => {
     id: "chat-window",
     className: "chat-window bg",
   });
+  const text = `Our chat is created on an open protocol, named “Nostr”, a new kind of censorship-resistant social networks.
+  Users can identify themselves on every Nostr apps with their private and public key.
+  The Alby Extension just helps you to conveniently manage your private key and to interact with other users across the network instead of handing it over to web apps.
+  Get now your access to open web =>`;
   const textLogIn = new UIDesign({
     tag: "div",
     id: "text-login",
     className: "text-login",
-  }).setInnerText(
-    "Our chat is created on an open protocol, named “Nostr”, a new kind of censorship-resistant social networksUsers can identify themselves  on every Nostr apps with their private and public key. The Alby Extension  just helps you to conveniently manage your private key and to interact with other users acrossthe network instead of handing it over to web apps. Get now your access to open web =>"
-  );
+  });
+  const createPi = (txt, i) =>
+    new UIDesign({ tag: "p", id: "no-prov-p" + i }).setInnerText(
+      txt
+    );
+  const pis = text.split("\n").map(createPi);
+  textLogIn.addChild(pis[0]);
+  textLogIn.addChild(pis[1]);
+  textLogIn.addChild(pis[2]);
 
   closeIcon.element.addEventListener("click", closeChat);
   popUpMenuDesign.children.forEach((e) => e.element.remove());
   popUpMenuDesign.children = [];
   popUpMenuDesign.uiNode.children = [];
   popUpMenuDesign.addChild(closeIcon);
-  // popUpMenu.addChild();
+  popUpMenuDesign.addChild(logInWindow);
+  logInWindow.addChild(textLogIn);
+
+  const popUpMenuClassBig =
+    "flex flex-column bg w_100% h_100% pos_a top_0 p_20 bkdf_blur-5 box_bb jc_c ai_c fs_200%";
+  popUpMenuDesign.element.className = popUpMenuClassBig;
 });
 // testata
 const testataDesign = new Testata().tree;
@@ -263,15 +273,16 @@ const minWidth768Handler = (_, data) => {
   if (data.matches) productScroll.className = LARGE_CLASS;
   else productScroll.className = DEF_CLASS;
   //
-  setTimeout(() => {
-    const popUpMenuClassBig =
-      "flex flex-column bg w_100% h_100% pos_a top_0 p_20 bkdf_blur-5 box_bb jc_c ai_c";
-    const popUpMenuClassSmall =
-      "flex flex-column bg w_100% h_100% pos_a top_0 p_20 jc_c ai_c bottom_20 r_20 z_9999 bkdf_blur-5";
-    if (data.matches)
-      popUpMenuDesign.element.className = popUpMenuClassBig;
-    else popUpMenuDesign.element.className = popUpMenuClassBig;
-  }, 200);
+  // setTimeout(() => {
+  //   const popUpMenuClassBig =
+  //     "flex flex-column bg w_100% h_100% pos_a top_0 p_20 bkdf_blur-5 box_bb jc_c ai_c fs_200%";
+  //   const popUpMenuClassSmall =
+  //     "flex flex-column bg w_100% h_100% pos_a top_0 p_20 jc_c ai_c bottom_20 r_20 z_9999 bkdf_blur-5";
+  //   const popUpMenuNone = `dis_none`;
+  //   if (data.matches && window.nostr)
+  //     popUpMenuDesign.element.className = popUpMenuClassBig;
+  //   else popUpMenuDesign.element.className = popUpMenuClassBig;
+  // }, 200);
 };
 app.on("minWidth768Change", minWidth768Handler);
 minWidth768Handler(undefined, app.minWidth768Query);
