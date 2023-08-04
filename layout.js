@@ -159,6 +159,11 @@ app.on("dom", () => {
   app.requestProvider();
 });
 
+app.on("nostr", () => {
+  console.log("got nostr");
+  getkey();
+});
+
 app.on("load", (app) => {
   console.log("loaded");
   const iffee = (condition, cb) => {

@@ -81,19 +81,22 @@ export class App implements App {
   requestProvider = async () => {
     this.emit("requestedProvider");
     try {
-      this.value.webln = await (
-        window as iWindow
-      ).WebLN!.requestProvider();
-      this.emit("got-provider");
+      setTimeout(async () => {
+        (globalThis as any).that = (
+          window as iWindow
+        ).WebLN!.requestProvider;
+        this.value.webln = await (
+          window as iWindow
+        ).WebLN!.requestProvider();
+        this.emit("got-provider");
+      }, 100);
     } catch (error) {
+      console.log("passed here too");
       this.emit("no-provider");
     }
   };
   checkNostr = () => {
-    console.log("checknostr");
-
     if ((window as any).nostr) {
-      console.log("found nostr");
       this.emit("nostr", (window as any).nostr);
     } else {
       console.log("nostr not found");
@@ -141,7 +144,7 @@ export class App implements App {
   ): this {
     const subscribers = this.#subscribers.get(type);
     const eventSub = this.#eventSubs.get(type);
-    if (type === "load" || type === "dom") {
+    if (type === "load" || type === "dom" || type === "nostr") {
       if (eventSub) {
         eventSub.push(subscriber as EventHandler);
       } else
